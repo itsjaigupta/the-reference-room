@@ -1335,6 +1335,243 @@ html[data-theme="dark"] .hint kbd { background: rgba(255,245,220,0.10); }
   .hint { left: 12px; }
   .panel { top: 0; right: 0; bottom: 0; border-radius: var(--r-sheet) 0 0 var(--r-sheet); }
 }
+
+/* ============================================================
+   MOBILE — phone-first layout (≤767px)
+   ============================================================ */
+.mobile-nav { display: none; }
+.mobile-search-strip { display: none; }
+
+@media (max-width: 767px) {
+  body { overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none !important; }
+  .hint { display: none; }
+
+  /* ---- Topbar ---- */
+  .topbar {
+    padding: 10px 16px 10px;
+    min-height: 52px;
+    gap: 12px;
+  }
+  .topbar h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.015em; }
+  .topbar .meta { font-size: 12px; color: var(--text-3); white-space: nowrap; }
+
+  /* ---- Mobile search + role strip ---- */
+  .mobile-search-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    position: sticky;
+    top: 52px;
+    z-index: 27;
+    background: var(--glass-2);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    border-bottom: 1px solid var(--line);
+  }
+  .mob-search {
+    flex: 1;
+    position: relative;
+  }
+  .mob-search input {
+    width: 100%;
+    background: var(--panel-3);
+    border: 0;
+    border-radius: var(--r-pill);
+    padding: 10px 14px 10px 36px;
+    color: var(--text);
+    font: inherit; font-size: 15px;
+    letter-spacing: -0.003em;
+    outline: none;
+    -webkit-appearance: none;
+    transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  html[data-theme="dark"] .mob-search input { background: rgba(255,245,220,0.07); }
+  .mob-search input::placeholder { color: var(--text-3); }
+  .mob-search input:focus {
+    background: var(--panel);
+    box-shadow: 0 0 0 3px var(--accent-tint), 0 0 0 0.5px var(--accent);
+  }
+  .mob-search::before {
+    content: "";
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' fill='none' stroke='%23756c5b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");
+    background-size: contain; background-repeat: no-repeat;
+    pointer-events: none;
+  }
+  html[data-theme="dark"] .mob-search::before {
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' fill='none' stroke='%23968d76' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");
+  }
+  .mob-icon-btn {
+    width: 38px; height: 38px;
+    background: var(--panel-3);
+    border: 0; border-radius: 50%;
+    color: var(--text-2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s var(--ease), transform 0.1s var(--ease);
+  }
+  html[data-theme="dark"] .mob-icon-btn { background: rgba(255,245,220,0.07); }
+  .mob-icon-btn:active { transform: scale(0.88); background: var(--accent-tint); }
+  .mob-icon-btn svg { width: 17px; height: 17px; stroke-width: 1.8; }
+  .mob-icon-btn.accent { color: var(--accent); }
+
+  /* ---- Filter bar ---- */
+  .filterbar {
+    top: 102px; /* topbar(52) + strip(50) */
+    padding: 8px 12px;
+    gap: 6px;
+  }
+  .filterbar-label { display: none; }
+  .filter-btn { padding: 7px 11px; font-size: 12.5px; }
+
+  /* ---- Filter pop: bottom sheet on mobile ---- */
+  .filter-pop {
+    position: fixed !important;
+    left: 0 !important; right: 0 !important;
+    bottom: 68px !important; top: auto !important;
+    width: 100% !important; max-width: 100% !important;
+    border-radius: 20px 20px 0 0;
+    transform-origin: bottom center;
+    transform: translateY(6px) scale(0.99);
+    max-height: 70vh; overflow-y: auto;
+    padding: 20px 18px 28px;
+  }
+  .filter-pop.open { transform: translateY(0) scale(1); }
+  .filter-pop-chips { gap: 7px; }
+  .filter-pop-chip { padding: 9px 14px; font-size: 13px; }
+
+  /* ---- Content ---- */
+  .content { padding: 18px 12px 100px; }
+  .app.panel-open .content { margin-right: 0; }
+
+  /* ---- Card grid: 2 cols ---- */
+  .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .card { min-height: 112px; }
+  .card-body { padding: 12px 12px 12px; gap: 3px; }
+  .card-name { font-size: 13.5px; line-height: 1.2; }
+  .card-blurb { font-size: 11.5px; margin-top: 3px; }
+  .card-icon { width: 20px; height: 20px; margin-bottom: 1px; }
+  .card-icon svg { width: 18px; height: 18px; }
+  .card-pin { opacity: 1; top: 8px; right: 6px; padding: 5px; }
+
+  /* ---- Group titles ---- */
+  .set-group { margin-bottom: 36px; }
+  .set-grouptitle { font-size: 19px; margin-bottom: 12px; }
+
+  /* ---- Other shelves ---- */
+  .dp-grid, .tool-grid, .film-grid { grid-template-columns: 1fr; gap: 10px; }
+  .shelf > h2.display { font-size: 24px !important; }
+  .films-cat h3 { font-size: 17px; }
+
+  /* ---- Detail panel: full-width bottom sheet ---- */
+  .panel {
+    position: fixed !important;
+    top: auto !important;
+    left: 0 !important; right: 0 !important;
+    bottom: 64px !important;
+    width: 100% !important; max-width: 100% !important;
+    height: 90vh;
+    border-radius: 22px 22px 0 0 !important;
+    transform: translateY(105%) !important;
+    transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  }
+  .panel.open { transform: translateY(0) !important; }
+  .panel-handle {
+    display: block;
+    width: 38px; height: 4px;
+    background: var(--line-3);
+    border-radius: 2px;
+    margin: 12px auto 0;
+    flex-shrink: 0;
+  }
+  .panel-inner { padding: 16px 16px 80px; }
+  .panel-close { top: 14px; right: 14px; width: 32px; height: 32px; }
+  .detail-title { font-size: 22px; }
+  .detail-head { gap: 10px; padding-right: 40px; }
+  .detail-blurb { font-size: 13.5px; }
+  .detail-actions { gap: 6px; flex-wrap: wrap; }
+  .detail-actions button, .detail-actions a {
+    padding: 10px 14px; font-size: 13px; flex: 1; justify-content: center;
+    min-height: 44px;
+  }
+  .detail-icon { width: 36px; height: 36px; }
+  .detail-icon svg { width: 20px; height: 20px; }
+
+  /* ---- Media chips: 2-col grid on mobile ---- */
+  .media-chips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+  .media-chip {
+    border-radius: 10px; justify-content: center;
+    padding: 11px 10px; font-size: 12.5px;
+    min-height: 44px;
+  }
+
+  /* ---- Prop chips ---- */
+  .prop-chip { padding: 9px 12px; font-size: 12px; min-height: 38px; }
+
+  /* ---- Checklists ---- */
+  .check { padding: 18px 16px; }
+  .check label { font-size: 15px; }
+  .check input[type=checkbox] { width: 18px; height: 18px; }
+
+  /* ---- Bottom nav ---- */
+  .mobile-nav {
+    display: flex;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 64px;
+    padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    backdrop-filter: blur(40px) saturate(180%);
+    border-top: 1px solid var(--line);
+    z-index: 45;
+    align-items: stretch;
+  }
+  .mob-tab {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3px;
+    background: transparent; border: 0;
+    color: var(--text-3);
+    font: inherit; font-size: 10px; font-weight: 500;
+    cursor: pointer; padding: 6px 2px;
+    border-radius: 12px;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.15s var(--ease), background 0.12s var(--ease), transform 0.1s var(--ease);
+    letter-spacing: 0.01em;
+    min-height: 44px;
+  }
+  .mob-tab svg { width: 22px; height: 22px; stroke-width: 1.6; flex-shrink: 0; }
+  .mob-tab span { line-height: 1; }
+  .mob-tab.active { color: var(--accent); }
+  .mob-tab:active { background: var(--accent-tint); transform: scale(0.93); transition-duration: 0.08s; }
+
+  /* Modal keeps working fine; role sheet already centered */
+  .modal { padding: 16px; }
+  .modal-card { padding: 22px 18px 20px; border-radius: 18px; }
+  .modal-title { font-size: 22px; }
+  .role-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .role-opt { padding: 10px 10px; gap: 8px; }
+  .role-opt .role-glyph { width: 26px; height: 26px; }
+  .role-opt-name { font-size: 13px; }
+  .role-opt-sub { font-size: 11px; }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  .card-grid { gap: 8px; }
+  .card-name { font-size: 12.5px; }
+  .mob-tab { font-size: 9px; }
+  .mob-tab svg { width: 20px; height: 20px; }
+  .media-chips { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -1501,6 +1738,19 @@ html[data-theme="dark"] .hint kbd { background: rgba(255,245,220,0.10); }
     <div class="topbar">
       <h1 id="topbar-title">All Sets &amp; Locations</h1>
       <span class="meta" id="topbar-meta">84 categories</span>
+    </div>
+
+    <!-- Mobile: search + role + theme strip (hidden on desktop) -->
+    <div class="mobile-search-strip">
+      <div class="mob-search">
+        <input id="mob-search-input" type="search" placeholder="Search scenes, sets…" autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <button class="mob-icon-btn accent" onclick="openRoleSheet()" title="Change role" id="mob-role-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+      </button>
+      <button class="mob-icon-btn" onclick="document.getElementById('theme-btn').click()" title="Toggle theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
     </div>
 
     <div class="filterbar" id="filterbar">
@@ -2184,6 +2434,7 @@ html[data-theme="dark"] .hint kbd { background: rgba(255,245,220,0.10); }
 
 <div class="panel-bg" id="panel-bg" onclick="closePanel()"></div>
 <aside class="panel" id="panel">
+  <div class="panel-handle" id="panel-handle"></div>
   <button class="panel-close" onclick="closePanel()" title="Close (Esc)">✕</button>
   <div class="panel-inner" id="panel-inner">
     <div class="detail" data-anchor="bedroom">
@@ -10951,6 +11202,34 @@ html[data-theme="dark"] .hint kbd { background: rgba(255,245,220,0.10); }
 
 <div class="hint"><span><kbd>/</kbd> Search</span><span><kbd>F</kbd> Filters</span><span><kbd>R</kbd> Role</span><span><kbd>esc</kbd> Close</span><span><kbd>1</kbd>–<kbd>6</kbd> Tabs</span></div>
 
+<!-- Mobile bottom tab navigation -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Main navigation">
+  <button class="mob-tab active" data-tab="sets" onclick="mobSwitchTab('sets')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    <span>Sets</span>
+  </button>
+  <button class="mob-tab" data-tab="acts" onclick="mobSwitchTab('acts')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+    <span>Activities</span>
+  </button>
+  <button class="mob-tab" data-tab="dps" onclick="mobSwitchTab('dps')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+    <span>DPs</span>
+  </button>
+  <button class="mob-tab" data-tab="films" onclick="mobSwitchTab('films')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 8h18M3 16h18M7 4v16M17 4v16"/></svg>
+    <span>Films</span>
+  </button>
+  <button class="mob-tab" data-tab="tools" onclick="mobSwitchTab('tools')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    <span>Tools</span>
+  </button>
+  <button class="mob-tab" data-tab="checks" onclick="mobSwitchTab('checks')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span>Checks</span>
+  </button>
+</nav>
+
 <div class="modal-bg" id="role-bg" onclick="closeRoleSheet()"></div>
 <div class="modal" id="role-modal" role="dialog" aria-modal="true" aria-labelledby="role-title">
   <div class="modal-card">
@@ -11527,6 +11806,69 @@ renderFilterUI();
 if(!localStorage.getItem(ROLE_SEEN)){
   setTimeout(openRoleSheet, 400);
 }
+
+// ---- Mobile: bottom nav + search sync ---------------------------
+function mobSwitchTab(tab){
+  // reuse the existing desktop tab click
+  const desktopTab = document.querySelector('.sb-tab[data-tab="'+tab+'"]');
+  if(desktopTab) desktopTab.click();
+  // sync bottom nav active state
+  document.querySelectorAll('.mob-tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+}
+
+// Keep mobile bottom nav in sync when desktop tabs are clicked
+tabs.forEach(t=>{
+  t.addEventListener('click',()=>{
+    const tab=t.dataset.tab;
+    document.querySelectorAll('.mob-tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  });
+});
+
+// Mobile search syncs with the desktop sidebar search
+const mobSearchInput = document.getElementById('mob-search-input');
+if(mobSearchInput){
+  mobSearchInput.addEventListener('input', function(){
+    const search = document.getElementById('search');
+    search.value = this.value;
+    search.dispatchEvent(new Event('input', {bubbles:true}));
+  });
+  // Also keep in sync if desktop search changes
+  document.getElementById('search').addEventListener('input', function(){
+    if(document.activeElement !== mobSearchInput){
+      mobSearchInput.value = this.value;
+    }
+  });
+}
+
+// Panel swipe-to-close on mobile (touch drag down to dismiss)
+(function(){
+  const panel = document.getElementById('panel');
+  let startY=0, startScroll=0, dragging=false;
+  panel.addEventListener('touchstart', function(e){
+    const inner = document.getElementById('panel-inner');
+    startY = e.touches[0].clientY;
+    startScroll = inner.scrollTop;
+    dragging = false;
+  }, {passive:true});
+  panel.addEventListener('touchmove', function(e){
+    const inner = document.getElementById('panel-inner');
+    const dy = e.touches[0].clientY - startY;
+    // Only drag-to-dismiss when scrolled to top and pulling down
+    if(dy > 10 && startScroll === 0){
+      dragging = true;
+      panel.style.transform = 'translateY('+Math.max(0,dy)+'px)';
+      panel.style.transition = 'none';
+    }
+  }, {passive:true});
+  panel.addEventListener('touchend', function(e){
+    if(!dragging) return;
+    panel.style.transition = '';
+    const dy = e.changedTouches[0].clientY - startY;
+    if(dy > 120){ closePanel(); }
+    else { panel.style.transform = ''; }
+    dragging = false;
+  });
+})();
 </script>
 
 </body>
