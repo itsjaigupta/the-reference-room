@@ -1,0 +1,21 @@
+name = "reference-room"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# Public origin allowed to call this Worker. Use "*" while testing, then
+# lock it to your site before going live.
+[vars]
+ALLOW_ORIGIN = "*"
+# ALLOW_ORIGIN = "https://currentmethod.in"
+
+# KV namespace for shared "pinned sets".
+# Create it once, then paste the id below:
+#   npx wrangler kv namespace create SETS
+[[kv_namespaces]]
+binding = "SETS"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+# preview_id = "REPLACE_FOR_wrangler_dev"
+
+# Secrets are NOT stored here. Set them with:
+#   npx wrangler secret put UNSPLASH_KEY
+#   npx wrangler secret put PEXELS_KEY
