@@ -1,0 +1,296 @@
+Style / Aesthetic: Modern minimal, luxury, middle‑class Indian, vintage, industrial,
+institutional, etc.
+Brand Tone: Mass, premium, aspirational, edgy, nostalgic, clinical.
+UseCase / ContentType: Fashion film, beauty tutorial, food commercial, fintech ad,
+educational reel, etc.
+PropCluster: Bundles like “Base furniture”, “Background tech”, “Wall décor”, “Hero props”,
+“Consumables”.
+IndividualProp: Atomic items (e.g., “stainless steel water bottle”, “IV stand”, “rickety
+wooden school desk”).
+ShotScale / Area: Where props appear (foreground hero table, mid-ground wall,
+background corridor).
+Prop list templates from production tools already segment by prop item, number, scene,
+location, and notes; this structure extends those fields with style and function attributes
+tailored for AI prompting.[ 2]
+For each sub-setup row, include:
+nam e: e.g., “Middle‑class Indian bedroom – male 25–30”.
+location_type_id: link to macro category.
+style: e.g., “contemporary, slightly cluttered, budget IKEA‑style furniture”.
+geography: e.g., “urban India – Delhi / Mumbai tier‑1”.
+tim e_of_day_default: morning, afternoon, night.
+dom inant_colors: hex or text (“warm neutrals + teal accent”).
+m ood_tags: cozy, aspirational, aspirational‑yet-relatable.
+hero_zones: “bed area”, “study desk”, “wardrobe / mirror corner”.
+This kind of metadata mirrors how production designers annotate visual references and how
+location libraries describe properties for clients.[ 4]
+For AI prompting, store both human-readable and prompt-friendly fields:
+cluster_nam e: “Bed area base dressing”.
+function: base/hero/background, practical vs. decorative.
+props: array of prop IDs or structured child rows.
+Each IndividualProp might have:
+nam e: “double bed with plain wooden headboard”.
+category: furniture, décor, tech, stationery, medical, food, vehicle, etc.
+6][
+4.2 Example Fields for SubSetup
+7][
+4.3 Example Fields for PropCluster and IndividualProp
+
+-- 3 of 18 --
+
+style_tags: modern, vintage, industrial, school‑issue, hospital‑grade.
+brand_archetype_tags: luxury, budget, eco, techy, playful.
+usage: hand prop, set dressing, wardrobe accessory.
+Film-prop documentation and prop houses typically classify items at this level for efficient
+searching and hire.[ 4]
+Residential locations are among the most-booked commercial and photo-shoot spaces because
+they ground products in everyday life.[ 9][^10]
+They are essential for FMCG, fashion, home décor, consumer tech, and insurance advertising.
+Bedrooms are used for morning routines, sleep, intimacy, late-night work, and youth lifestyle
+stories.
+Prop lists for bedrooms usually include a bed, side tables, lamps, pictures, clocks, and family
+photos, with variations depending on age and social class.[ 3]
+Key sub-setups:
+Urban bachelor/young professional bedroom – compact room, semi‑messy, gadgets visible.
+Couple’s bedroom – larger bed, balanced décor, his/her sides emphasized.
+Kids’ bedroom – toys, playful colors, school elements.
+Luxury suite bedroom – hotel-like, minimal clutter, high-end textures.
+Core prop clusters:
+Base furniture: bed, mattress, pillows, bedsheets, headboard, side tables, dresser, wardrobe.
+Lighting: bedside lamps, ceiling fixture, window sheers for natural light.
+Décor: wall art, framed photos, plants, rugs, throw cushions.
+Tech: smartphones, laptops, tablets, alarm clock, smart speakers, chargers.
+Personal items: books, glasses, water bottle, lotion, perfumes, jewelry tray.
+Variation tags:
+Messy vs. tidy (clothes on chair, unmade bed vs. hotel-perfect).
+Age (posters and fairy lights for teens vs. neutral art for adults).
+Socio‑economic (laminated furniture and plastic storage vs. solid wood and designer
+lamps).
+14][
+5. Residential Environments
+7][
+5.1 Bedrooms
+6][
+
+-- 4 of 18 --
+
+Living rooms host family interactions, product demos, unboxing, and group viewing of TV or
+digital content.[ 13]
+Location libraries highlight open-plan living/kitchen spaces and loft-style living rooms as
+highly requested for lifestyle commercials.[ 10]
+Core sub-setups:
+Middle‑class apartment living room (India-specific décor, mixed furniture).
+Premium minimalist loft with large windows.
+Traditional family drawing room with heavy sofas and décor.
+Prop clusters:
+Base furniture: sofa, armchairs, coffee table, side tables, TV unit.
+Media: TV, soundbar, gaming console, remotes.
+Décor: rugs, cushions, artwork, bookshelf, indoor plants.
+Practical: snack bowls, tea set, remote caddy, coasters.
+Kitchens and dining areas are prime locations for food, appliance, and family-mealtime
+advertising.[ 3]
+Residential prop lists typically include table, plates, cutlery, stove, fridge, small appliances, and
+food ingredients.[ 2]
+Sub-setups:
+Compact Indian kitchen with overhead cabinets and gas stove.
+Modular premium kitchen with island counter.
+Rustic open kitchen for organic/healthy brands.
+Core prop clusters:
+Major fixtures: cabinets, countertop, sink, stove, fridge.
+Appliances: microwave, mixer-grinder, toaster, coffee machine, water purifier.
+Cookware: pans, pots, spatulas, knives, cutting boards.
+Serving: plates, bowls, glasses, mugs, serving platters.
+Food: vegetables, fruits, packaged goods, spices, oil bottles.
+5.2 Living Rooms
+7][
+9][
+5.3 Kitchens & Dining
+13][
+6][
+
+-- 5 of 18 --
+
+Bathrooms appear in personal-care, hygiene, and healthcare-related content.
+Prop examples include sink, mirror, toothbrush, toiletries, towels, and shower fixtures.[ 3]
+Sub-setups and clusters:
+Compact family bathroom vs. luxury spa-like bathroom.
+Vanity area: mirror, basin, toiletries, perfume, hairbrush, electric trimmer.
+Shower area: shower head, shampoo and body wash bottles, loofahs.
+Utility: towel racks, laundry basket, bathmat.
+Home offices became key backdrops for tech, productivity, and remote-work narratives.[ 15]
+Many apartment listings emphasize dedicated work nooks or desks with good natural light for
+content creation.[ 10]
+Prop clusters:
+Furniture: desk, ergonomic chair, side shelves.
+Tech: laptop/desktop, monitor, keyboard, mouse, webcam, mic, ring light.
+Stationery: notebooks, pens, sticky notes, organizers.
+Décor: plants, minimal artwork, shelves with books.
+Additional residential environments useful for ads and Reels:
+Balconies/Terraces – railing, plants, café table, city view.
+Staircases and hallways – family movement, transitions.
+Utility spaces – washing machine, laundry drying area for detergent and fabric-care brands.
+Educational settings communicate aspiration, youth, discipline, or institutional credibility,
+making them central for edtech, coaching, stationery, and telecom/broadband advertising.[ 4]
+Film prop lists often include school hallways, classroom desks, and worksheets, reflecting
+common educational environments.[^6]
+Sub-setups:
+Government school classroom (basic benches, green board).
+Private school classroom (branded colors, smartboard).
+5.4 Bathrooms
+6][
+5.5 Home Offices & Study Corners
+13][
+9][
+5.6 Other Residential Setups
+6. Education: Schools and Colleges
+3][
+6.1 Classrooms (School)
+
+-- 6 of 18 --
+
+Exam hall configuration.
+Prop clusters:
+Furniture: student desks and benches, teacher’s desk and chair.
+Teaching tools: black/whiteboard, smartboard, projectors, charts, globes.
+Stationery: textbooks, notebooks, pens, pencils, rulers, bags.
+Environmental: noticeboard with timetables, posters, classroom rules.
+Science labs support STEM and edtech narratives.
+Typical props include lab benches, glassware, microscopes, safety gear, and charts.[^4]
+Clusters:
+Workstations: lab tables, stools.
+Equipment: microscopes, test tube racks, Bunsen burners, flasks.
+Safety: lab coats, goggles, gloves, fire extinguisher.
+Wall dressing: periodic table, diagrams.
+Corridors and playgrounds capture energy and friendship.
+Location packages often emphasize wide hallways, lockers, and sports fields as versatile school
+backdrops.[ 10]
+Props:
+Corridors: lockers, notice boards, class-door signage, cleaning carts.
+Playgrounds: goalposts, cricket equipment, basketball hoops, swings, slides, benches.
+Colleges signal independence, romance, and future ambition, used heavily in youth and brand-
+building commercials.[ 3]
+Film campuses that double as hospitals, police stations, and gyms show how multi-purpose
+institutional architecture can be used as flexible backdrops.[^12]
+Sub-setups:
+Campus quad: lawns, benches, paths, sculptures.
+Lecture halls: tiered seating, big screens.
+Canteen and hangout spots: tables, food counters.
+Prop clusters:
+Student gear: backpacks, laptops, headphones, skateboards, bikes.
+6.2 Laboratories
+6.3 School Corridors and Playgrounds
+12][
+6.4 College Campuses
+13][
+
+-- 7 of 18 --
+
+Institutional: signage, notice boards, ID-card scanners.
+Healthcare environments are critical for pharma, diagnostics, insurance, and wellness content.
+Specialist medical prop houses maintain extensive inventories of hospital beds, monitors,
+wheelchairs, and other equipment for realistic sets.[ 4]
+Sub-setups:
+General ward with multiple beds.
+Private room/ICU.
+Pediatric ward.
+Prop clusters:
+Medical: hospital beds, IV stands, heart monitors, oxygen cylinders, drip bags.
+Furniture: side tables, visitor chairs, curtain partitions.
+Small props: charts at bedside, patient files, water jugs, disposable cups.
+Décor: wall clocks, basic paintings, safety signage.
+Reception areas support narratives around check-in, anxiety, and professionalism.
+Hospital location descriptions emphasize reception desks, branded signage, and waiting chairs
+as key visual elements.[ 14]
+Props:
+Reception desk, computers, phones.
+Queue systems, token display, forms.
+Seating rows, coffee vending machines, magazines, water dispensers.
+Smaller clinics and diagnostic labs provide more intimate, neighborhood-health vibes suited to
+local advertising.
+Prop inventories list examination beds, basic diagnostic tools, and medicine shelves for such
+setups.[^14]
+Clusters:
+Exam rooms: examination bed, doctor’s stool, blood pressure monitor, stethoscope.
+Pharmacy: counter, shelving with medicine boxes, POS terminal.
+Lab: sample racks, centrifuges (visual), refrigerators with labels.
+7. Healthcare: Hospitals and Clinics
+14][
+7.1 Hospital Wards
+7.2 Reception & Waiting Areas
+12][
+7.3 Clinics, Pharmacies, and Labs
+
+-- 8 of 18 --
+
+Urban public locations bring energy, authenticity, and scale, which are widely used in
+commercials and outdoor advertising imagery.[ 16]
+Location guides highlight city streets, downtown intersections, bus stops, metro stations, and
+markets as prime spots for visibility and dynamic visuals.[ 17]
+Sub-setups:
+High street shopping area.
+Residential lane.
+Gritty alley (for edgy fashion or music content).
+Prop clusters:
+Street infrastructure: streetlights, traffic lights, road markings, bollards.
+Vehicles: cars, bikes, scooters, auto‑rickshaws, buses.
+Street vendors: carts, umbrellas, crates, display racks.
+Signage: shop boards, posters, billboards, street names.
+Transit locations offer a captive audience and repeated exposure in outdoor advertising, and
+they are visually rich for video content.[ 17]
+Props:
+Bus stop shelters, seating, route maps, timetable boards.
+Metro signage, turnstiles, ticket machines.
+Commuter props: backpacks, headphones, newspapers, coffee cups, suitcases.
+Markets are used for food, travel, and culture-driven campaigns.
+Production blogs and travel content emphasize colorful stalls, hanging goods, and crowd
+density as aesthetic hooks.[ 13]
+Prop clusters:
+Stall structures, tables, canopies.
+Goods: fruits, vegetables, textiles, street food carts.
+Transaction elements: scales, cash boxes, digital payment QR stands.
+8. Streets, Markets, and Urban Public Spaces
+13][
+16][
+8.1 Streets and Alleys
+8.2 Bus Stops, Metro Stations, and Transit Hubs
+16][
+8.3 Markets and Bazaars
+18][
+
+-- 9 of 18 --
+
+Parks and playgrounds lend themselves to family, fitness, and childhood narratives.
+Sports grounds support athletic, education, and corporate team-building stories.[ 16]
+Props:
+Benches, swings, slides, climbing frames.
+Jogging track signage, water fountains.
+Sports gear: football goals, cricket nets, cones, mats.
+Food and beverage environments are core to QSR, delivery apps, beverages, and social lifestyle
+campaigns.
+Location services frequently list restaurants, cafés, and bars as high-demand spaces for shoots.
+[ 8]
+Sub-setups:
+Family restaurant booth seating.
+Fast-food counter with menu boards.
+Local dhaba-style eatery.
+Prop clusters:
+Furniture: tables, chairs, booths, barstools.
+Service: counter, POS machines, tray stands.
+Dishware: plates, glasses, cutlery, serving trays.
+Visual branding: menu boards, posters, standees, neon signage.
+Cafés serve as social and work spaces ideal for youth and creator-focused Reels.
+Fashion and lifestyle shoots often use cafés with distinctive décor as backdrops.[ 11]
+Props:
+Espresso machine, grinders, coffee cups, saucers.
+Display cases for pastries.
+Décor: chalkboard menus, plants, bookshelves, art.
+Tech: Wi‑Fi password signage, laptops, chargers.
+8.4 Parks, Playgrounds, and Sports Grounds
+13][
+9. Restaurants, Cafés, and Food & Beverage Spaces
+7][
+9.1 Casual Restaurants and QSR Outlets
+9.2 Cafés and Coffee Shops
+7][
+
+-- 10 of 18 --
+
