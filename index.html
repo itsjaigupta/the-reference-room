@@ -2000,6 +2000,147 @@ html[data-theme="light"] .pins-actions .pin-btn { background: var(--panel-3); }
    Only the Notes textarea block remains in the main detail panel.          */
 .detail-block:has(.detail-links) { display: none; }
 .detail-actions { display: none; }
+
+/* ====================== AI Reference Brain panel ====================== */
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px 7px 11px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  border: 0; border-radius: 22px;
+  color: #fff; font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.30);
+  transition: filter 0.15s, transform 0.1s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+.ai-btn:hover { filter: brightness(1.1); box-shadow: 0 4px 18px rgba(229,64,126,0.45); }
+.ai-btn:active { transform: scale(0.97); }
+.ai-btn svg { width: 15px; height: 15px; stroke-width: 1.8; }
+
+.ai-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.ai-overlay.open { opacity: 1; pointer-events: auto; }
+
+.ai-modal {
+  background: var(--panel);
+  border-radius: 22px;
+  box-shadow: 0 32px 100px rgba(0,0,0,0.55), 0 0 0 0.5px var(--line-2);
+  width: min(640px, 100%);
+  max-height: min(84vh, 680px);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transform: translateY(16px) scale(0.96);
+  transition: transform 0.22s cubic-bezier(0.34,1.36,0.5,1);
+}
+.ai-overlay.open .ai-modal { transform: translateY(0) scale(1); }
+
+.ai-modal-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 20px 16px;
+  border-bottom: 0.5px solid var(--line);
+  flex-shrink: 0;
+}
+.ai-modal-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.ai-modal-icon svg { width: 18px; height: 18px; stroke-width: 1.7; }
+.ai-modal-title { flex: 1; font-family: 'DM Serif Display', serif; font-size: 19px; font-weight: 400; letter-spacing: -0.01em; }
+.ai-modal-close {
+  background: transparent; border: 0; color: var(--text-3);
+  cursor: pointer; padding: 6px; border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+.ai-modal-close:hover { color: var(--text); background: var(--bg-2); }
+
+.ai-tabs { display: flex; gap: 4px; padding: 12px 20px 0; flex-shrink: 0; }
+.ai-tab {
+  background: transparent; border: 0;
+  color: var(--text-3); font: inherit; font-size: 13px; font-weight: 500;
+  padding: 7px 14px; border-radius: 9px; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: -0.003em;
+}
+.ai-tab:hover { background: var(--bg-2); color: var(--text); }
+.ai-tab.active { background: var(--accent-tint); color: var(--accent); font-weight: 600; }
+
+.ai-body { flex: 1; overflow-y: auto; padding: 16px 20px 24px; }
+.ai-pane { display: none; }
+.ai-pane.active { display: block; }
+
+.ai-field-label {
+  font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 8px;
+}
+.ai-textarea {
+  width: 100%; min-height: 110px; resize: vertical;
+  background: var(--bg-2); border: 0;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  border-radius: 12px; padding: 12px 14px;
+  color: var(--text); font: inherit; font-size: 13.5px; line-height: 1.55;
+  outline: none;
+  transition: box-shadow 0.15s;
+}
+.ai-textarea:focus { box-shadow: 0 0 0 1.5px var(--accent); }
+.ai-textarea::placeholder { color: var(--text-4); font-size: 13px; }
+.ai-run {
+  margin-top: 12px; width: 100%; padding: 11px 16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: 0; border-radius: 12px;
+  color: #fff; font: inherit; font-size: 13.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.25);
+  transition: filter 0.15s, transform 0.1s;
+}
+.ai-run:hover { filter: brightness(1.08); }
+.ai-run:active { transform: scale(0.995); }
+.ai-run:disabled { opacity: 0.5; pointer-events: none; }
+
+.ai-results { margin-top: 18px; }
+.ai-section-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 9px;
+}
+.ai-query-list { display: flex; flex-direction: column; gap: 6px; }
+.ai-query-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 10px;
+  background: var(--bg-2);
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  text-decoration: none; color: var(--text); font-size: 13px;
+  letter-spacing: -0.003em;
+  transition: background 0.15s, box-shadow 0.15s, color 0.15s;
+}
+.ai-query-item:hover { background: var(--accent-tint); box-shadow: 0 0 0 1px var(--accent); color: var(--accent); }
+.ai-query-item .qi-arrow { color: var(--accent); font-size: 14px; flex-shrink: 0; }
+.ai-query-item .qi-label { font-size: 10.5px; color: var(--text-4); margin-right: 4px; flex-shrink: 0; }
+
+.ai-cards-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+.ai-card-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: 999px;
+  background: var(--accent-tint); color: var(--accent);
+  border: 0; font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  transition: background 0.15s;
+}
+.ai-card-chip:hover { background: var(--accent-tint-2); }
+.ai-card-chip .cc-star { font-size: 10px; opacity: 0.7; }
+.ai-card-chip .cc-reason { font-weight: 400; font-size: 11px; opacity: 0.7; margin-left: 4px; }
+
+.ai-status { padding: 12px 0; font-size: 13px; color: var(--text-3); }
+.ai-status.error { color: var(--hot); }
 </style>
 </head>
 <body>
@@ -2175,6 +2316,10 @@ html[data-theme="light"] .pins-actions .pin-btn { background: var(--panel-3); }
       <h1 id="topbar-title">All Sets &amp; Locations</h1>
       <span class="meta" id="topbar-meta">84 categories</span>
       <div class="topbar-actions">
+        <button class="ai-btn" onclick="openAI()" title="AI Reference Brain (scene queries + script analysis)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.68 5.17L19 9l-5.32 1.83L12 16l-1.68-5.17L5 9l5.32-1.83z"/><path d="M19 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+          AI
+        </button>
         <button class="tb-cmdk" onclick="openCmdk()" title="Search everything (⌘K or /)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           <span>Search</span><kbd>⌘K</kbd>
@@ -2886,6 +3031,39 @@ html[data-theme="light"] .pins-actions .pin-btn { background: var(--panel-3); }
 
     </div>
   </main>
+</div>
+
+<!-- ========================= AI Reference Brain ========================= -->
+<div class="ai-overlay" id="ai-overlay">
+  <div class="ai-modal" role="dialog" aria-modal="true" aria-label="AI Reference Brain">
+    <div class="ai-modal-head">
+      <div class="ai-modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.68 5.17L19 9l-5.32 1.83L12 16l-1.68-5.17L5 9l5.32-1.83z"/><path d="M19 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+      </div>
+      <div class="ai-modal-title">AI Reference Brain</div>
+      <button class="ai-modal-close" onclick="closeAI()" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="ai-tabs">
+      <button class="ai-tab active" data-ai-tab="query" onclick="switchAITab('query')">✦ Query Generator</button>
+      <button class="ai-tab" data-ai-tab="script" onclick="switchAITab('script')">📄 Script → Cards</button>
+    </div>
+    <div class="ai-body">
+      <div class="ai-pane active" id="ai-pane-query">
+        <div class="ai-field-label">Describe your scene or visual</div>
+        <textarea class="ai-textarea" id="ai-query-input" rows="5" placeholder="e.g. &quot;Moody night bedroom scene, couple in argument, warm tungsten practicals, cramped Mumbai middle-class flat&quot;&#10;&#10;e.g. &quot;70s Indian joint family living room, afternoon golden light, crowded with relatives&quot;"></textarea>
+        <button class="ai-run" id="ai-query-btn" onclick="runAIQuery()">Generate Pinterest queries ✦</button>
+        <div class="ai-results" id="ai-query-results"></div>
+      </div>
+      <div class="ai-pane" id="ai-pane-script">
+        <div class="ai-field-label">Paste a script scene or brief</div>
+        <textarea class="ai-textarea" id="ai-script-input" rows="8" placeholder="INT. KITCHEN - EARLY MORNING&#10;&#10;PRIYA (34) stands at the gas stove, stirring chai. The kitchen is small, tiled in 80s blue, a cooler humming in the corner. Her mother-in-law watches from the doorway..."></textarea>
+        <button class="ai-run" id="ai-script-btn" onclick="runAIScript()">Analyse scene ✦</button>
+        <div class="ai-results" id="ai-script-results"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="panel-bg" id="panel-bg" onclick="closePanel()"></div>
@@ -13178,6 +13356,125 @@ if(mobSearchInput){
     if(location.hash)routeFromHash();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+/* ========================= AI Reference Brain ========================= */
+(function(){
+  function openAI(){
+    const ov=document.getElementById('ai-overlay');
+    if(!ov) return;
+    ov.classList.add('open');
+    setTimeout(()=>{const t=document.getElementById('ai-query-input');if(t)t.focus();},150);
+  }
+  function closeAI(){
+    const ov=document.getElementById('ai-overlay');
+    if(ov) ov.classList.remove('open');
+  }
+  function switchAITab(tab){
+    document.querySelectorAll('.ai-tab').forEach(b=>b.classList.toggle('active',b.dataset.aiTab===tab));
+    document.querySelectorAll('.ai-pane').forEach(p=>p.classList.toggle('active',p.id==='ai-pane-'+tab));
+    const inp=document.getElementById('ai-'+(tab==='query'?'query':'script')+'-input');
+    if(inp) inp.focus();
+  }
+  function aiEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function setStatus(el,msg,isError){
+    el.innerHTML='<div class="ai-status'+(isError?' error':'')+'">'+aiEsc(msg)+'</div>';
+  }
+
+  async function runAIQuery(){
+    const input=document.getElementById('ai-query-input');
+    const results=document.getElementById('ai-query-results');
+    const btn=document.getElementById('ai-query-btn');
+    const desc=(input.value||'').trim();
+    if(!desc){input.focus();return;}
+    const WORKER_BASE=((window.REFROOM_WORKER_BASE)||'').replace(/\/+$/,'');
+    if(!WORKER_BASE){setStatus(results,'Worker not configured',true);return;}
+    btn.disabled=true;
+    setStatus(results,'Generating queries…');
+    try{
+      const r=await fetch(WORKER_BASE+'/ai/query',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({description:desc})
+      });
+      const d=await r.json();
+      if(d.error){ setStatus(results,'Error: '+d.error+(d.detail?' — '+d.detail:''),true); return; }
+      const queries=(d.queries||[]).filter(Boolean);
+      if(!queries.length){ setStatus(results,'No queries returned',true); return; }
+      results.innerHTML=
+        '<div class="ai-section-label">Click to search on Pinterest</div>'+
+        '<div class="ai-query-list">'+
+          queries.map(q=>
+            '<a class="ai-query-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">'+
+            '<span class="qi-arrow">↗</span>'+aiEsc(q)+'</a>'
+          ).join('')+
+        '</div>';
+    }catch(e){ setStatus(results,'Request failed — is the worker running?',true); }
+    finally{ btn.disabled=false; }
+  }
+
+  async function runAIScript(){
+    const input=document.getElementById('ai-script-input');
+    const results=document.getElementById('ai-script-results');
+    const btn=document.getElementById('ai-script-btn');
+    const scene=(input.value||'').trim();
+    if(!scene){input.focus();return;}
+    const WORKER_BASE=((window.REFROOM_WORKER_BASE)||'').replace(/\/+$/,'');
+    if(!WORKER_BASE){setStatus(results,'Worker not configured',true);return;}
+    btn.disabled=true;
+    setStatus(results,'Analysing scene…');
+    try{
+      const r=await fetch(WORKER_BASE+'/ai/script',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({scene:scene})
+      });
+      const d=await r.json();
+      if(d.error){ setStatus(results,'Error: '+d.error+(d.detail?' — '+d.detail:''),true); return; }
+      const cards=(d.cards||[]).filter(c=>c&&c.slug);
+      const queries=(d.queries||[]).filter(Boolean);
+      let html='';
+      if(cards.length){
+        html+='<div class="ai-section-label">Matched reference cards</div>'+
+          '<div class="ai-cards-row">'+
+          cards.map(c=>{
+            const name=c.name||c.slug;
+            const reason=c.reason?' · '+c.reason:'';
+            return '<button class="ai-card-chip" title="'+aiEsc(reason||name)+'" onclick="closeAI();if(typeof openCard===\'function\')openCard(\''+aiEsc(c.slug)+'\')">'+
+              '<span class="cc-star">✦</span>'+aiEsc(name)+
+              (c.reason?'<span class="cc-reason">'+aiEsc(c.reason)+'</span>':'')+
+            '</button>';
+          }).join('')+
+          '</div>';
+      }
+      if(queries.length){
+        html+='<div class="ai-section-label" style="margin-top:'+(cards.length?'14px':'0')+'">Suggested Pinterest searches</div>'+
+          '<div class="ai-query-list">'+
+          queries.map(q=>{
+            const label=q.label?'<span class="qi-label">'+aiEsc(q.label)+'</span>':'';
+            const query=q.query||q;
+            return '<a class="ai-query-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(query)+'" target="_blank" rel="noopener">'+
+              '<span class="qi-arrow">↗</span>'+label+aiEsc(query)+'</a>';
+          }).join('')+
+          '</div>';
+      }
+      if(!html) html='<div class="ai-status">No results — try a more detailed scene description</div>';
+      results.innerHTML=html;
+    }catch(e){ setStatus(results,'Request failed — is the worker running?',true); }
+    finally{ btn.disabled=false; }
+  }
+
+  // Close on overlay click or Escape
+  const overlay=document.getElementById('ai-overlay');
+  if(overlay) overlay.addEventListener('click',e=>{ if(e.target===overlay) closeAI(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&overlay&&overlay.classList.contains('open')){ e.stopImmediatePropagation(); closeAI(); } },true);
+
+  // Expose globally
+  window.openAI=openAI;
+  window.closeAI=closeAI;
+  window.switchAITab=switchAITab;
+  window.runAIQuery=runAIQuery;
+  window.runAIScript=runAIScript;
 })();
 </script>
 

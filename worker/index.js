@@ -9,12 +9,15 @@
  *   2. OG scrape       GET /og?url=...    (24h edge-cached)
  *   3. Shared sets     POST /set  ·  GET /set/:id  ·  PUT /set/:id
  *      (KV-backed; 90-day TTL, or 1 year once an edit passcode is set)
+ *   4. AI endpoints    POST /ai/query  POST /ai/script
+ *      (DeepSeek-V3 via OpenAI-compatible API; key stays server-side)
  *
  * Bindings (see wrangler.toml):
  *   KV  SETS            — namespace for shared sets
  *   var ALLOW_ORIGIN    — e.g. "https://currentmethod.in" ("*" in dev)
  *   secret UNSPLASH_KEY — Unsplash Access Key  (wrangler secret put)
  *   secret PEXELS_KEY   — Pexels API key       (wrangler secret put)
+ *   secret DEEPSEEK_KEY — DeepSeek API key (wrangler secret put)
  */
 
 const NANO_ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789"; // no look-alikes
@@ -36,6 +39,8 @@ export default {
       if (path === "/pexels") return await pexels(url, env, origin);
       if (path === "/arena") return await arena(url, env, origin);
       if (path === "/pinterest/oembed") return await pinterestOembed(url, env, origin, ctx);
+      if (path === "/ai/query" && request.method === "POST") return await aiQuery(request, env, origin);
+      if (path === "/ai/script" && request.method === "POST") return await aiScript(request, env, origin);
       if (path === "/og") return await ogScrape(url, env, origin, ctx);
       if (path === "/set") return await createSet(request, env, origin);
 
@@ -323,4 +328,101 @@ async function updateSet(id, request, env, origin) {
   await env.SETS.put("set:" + id, JSON.stringify(rec), { expirationTtl: 365 * DAY });
   const { editToken, ...pub } = rec;
   return json(pub, 200, origin);
+}
+
+/* ========================= AI endpoints (DeepSeek-V3) ========================= */
+async function aiQuery(request, env, origin) {
+  if (!env.DEEPSEEK_KEY) return json({ error: "ai_not_configured" }, 503, origin);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "bad_json" }, 400, origin); }
+  const desc = (body.description || "").slice(0, 800).trim();
+  if (!desc) return json({ error: "empty_description" }, 400, origin);
+
+  const system = `You are a visual reference assistant for Indian film and advertising production.
+The user describes a scene or visual style. Generate exactly 4 targeted Pinterest search queries that would find excellent visual references for a film or ad shoot.
+
+Output ONLY valid JSON: {"queries": ["query1", "query2", "query3", "query4"]}
+
+Rules:
+- Each query: 4-8 words, evocative, specific to the scene described
+- Variety: one for overall scene/set design, one for lighting/mood, one for props/details, one for color palette
+- No generic filler like "photo" "image" "Pinterest" "reference"
+- Indian context when relevant (mention city, region, cultural specifics)
+- Be cinematic and production-focused`;
+
+  return await callDeepSeekJSON(env.DEEPSEEK_KEY, system, desc, origin);
+}
+
+async function aiScript(request, env, origin) {
+  if (!env.DEEPSEEK_KEY) return json({ error: "ai_not_configured" }, 503, origin);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "bad_json" }, 400, origin); }
+  const scene = (body.scene || "").slice(0, 3000).trim();
+  if (!scene) return json({ error: "empty_scene" }, 400, origin);
+
+  const CARDS = `bedroom,bathroom,kitchen,living,dining,kids,boys,girls,bridal,dressing,study,home_office,entrance,garage,laundry,aangan,balcony,terrace,garden,office,creative_office,cafe,restaurant,bar,hotel,hospital,school,airport,street,market,temple,church,mosque,cinema,salon,gym,police,bank,courthouse,wedding,beach,mountain,desert,rain,village,dhaba,mall,slums,petrol,railway,heritage_city,lower_class,middle_class,upper_class,90s_home,cyc_white,cyc_family_meeting,cyc_lawyer,cyc_tattoo,cyc_negotiation,cyc_heist,cyc_yoga,cyc_retail,act_diwali,act_holi,act_christmas,act_eid,act_birthday_kid,act_birthday_adult,act_road_trip,act_cooking_together,act_dinner_party,act_wedding,act_haldi_mehendi`;
+
+  // Build a name map for common slugs
+  const NAME = {bedroom:"Bedroom",bathroom:"Bathroom",kitchen:"Kitchen",living:"Living Room",dining:"Dining Room",kids:"Kids Room",boys:"Boys Room",girls:"Girls Room",bridal:"Bridal Room",dressing:"Dressing Area",study:"Study Area",home_office:"Home Office",entrance:"Entrance / Foyer",garage:"Garage",laundry:"Laundry",aangan:"Aangan / Courtyard",balcony:"Balcony",terrace:"Terrace / Rooftop",garden:"Home Garden",office:"Office",creative_office:"Creative Office",cafe:"Café",restaurant:"Restaurant",bar:"Bar",hotel:"Hotel",hospital:"Hospital",school:"School",airport:"Airport",street:"Street",market:"Market",temple:"Temple",church:"Church",mosque:"Mosque",cinema:"Cinema",salon:"Salon",gym:"Gym",police:"Police Station",bank:"Bank",courthouse:"Courthouse",wedding:"Wedding",beach:"Beach",mountain:"Mountain",desert:"Desert",rain:"Rain / Monsoon",village:"Village",dhaba:"Dhaba",mall:"Mall",slums:"Slums",petrol:"Petrol Station",railway:"Railway Station",heritage_city:"Heritage City",lower_class:"Lower Class Home",middle_class:"Middle Class Home",upper_class:"Upper Class Home","90s_home":"90s Home",cyc_white:"Cyclorama · White",cyc_family_meeting:"Cyc · Family Meeting",cyc_lawyer:"Cyc · Lawyer's Office",cyc_tattoo:"Cyc · Tattoo Parlour",cyc_negotiation:"Cyc · Hostage / Negotiation",cyc_heist:"Cyc · Heist / Burglary",cyc_yoga:"Cyc · Yoga Couple",cyc_retail:"Cyc · Retail / Furniture Store",act_diwali:"Diwali",act_holi:"Holi",act_christmas:"Christmas",act_eid:"Eid",act_birthday_kid:"Kids Birthday",act_birthday_adult:"Adult Birthday",act_road_trip:"Road Trip",act_cooking_together:"Cooking Together",act_dinner_party:"Dinner Party",act_wedding:"Wedding Activity",act_haldi_mehendi:"Haldi / Mehendi"};
+
+  const system = `You are a visual reference assistant for Indian film production.
+Given a script scene excerpt, identify what visual references are needed and map them to the reference card system.
+
+Available card slugs: ${CARDS}
+
+Output ONLY valid JSON:
+{
+  "cards": [{"slug":"bedroom","name":"Bedroom","reason":"Character wakes up in opening shot"}],
+  "queries": [{"label":"Bedroom mood","query":"moody bedroom night scene warm tungsten"}]
+}
+
+Rules:
+- Match 1-5 most relevant cards from the slug list
+- Generate 2-6 Pinterest queries, specific to scene mood, era, style, culture
+- reason: max 8 words explaining why this card fits
+- Use Indian regional/cultural specifics in queries when relevant
+- If the scene is a cyclorama/studio setup, prefer cyc_ cards`;
+
+  const result = await callDeepSeekJSON(env.DEEPSEEK_KEY, system, scene, origin);
+  // Enrich card names from our local map
+  if (result && result.cards) {
+    result.cards = result.cards.map(c => ({
+      ...c,
+      name: c.name || NAME[c.slug] || c.slug
+    }));
+  }
+  return result; // already a Response from callDeepSeekJSON
+}
+
+async function callDeepSeekJSON(key, systemPrompt, userMessage, origin) {
+  try {
+    const r = await fetch("https://api.deepseek.com/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${key}`
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage }
+        ],
+        temperature: 0.7,
+        max_tokens: 700,
+        response_format: { type: "json_object" }
+      })
+    });
+    if (!r.ok) {
+      const errText = await r.text();
+      return json({ error: "deepseek_upstream", status: r.status, detail: errText.slice(0, 300) }, 502, origin);
+    }
+    const data = await r.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) return json({ error: "empty_response" }, 502, origin);
+    const parsed = JSON.parse(content);
+    return json(parsed, 200, origin);
+  } catch (e) {
+    return json({ error: "ai_error", detail: String(e?.message || e) }, 500, origin);
+  }
 }
