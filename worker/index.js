@@ -403,7 +403,7 @@ async function callDeepSeekJSON(key, systemPrompt, userMessage, origin) {
         "Authorization": `Bearer ${key}`
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "deepseek-v4-pro",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage }
