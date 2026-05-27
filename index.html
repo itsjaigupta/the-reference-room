@@ -2390,7 +2390,16 @@ body.home-mode .home-hero { display: flex; }
 }
 </style>
 </head>
-<body>
+<body class="home-mode">
+<script>
+  // Skip home-mode if user arrived via a deep link (card slug, set, share)
+  try {
+    var h = (location.hash || '');
+    if (h.startsWith('#/card/') || h.startsWith('#/set/') || h.startsWith('#s=') || /^#[a-z0-9_]+$/i.test(h)) {
+      document.body.classList.remove('home-mode');
+    }
+  } catch(e){}
+</script>
 
 <!-- ============= SEARCH-FIRST HOME VIEW ============= -->
 <section class="home-hero" id="home-hero">
@@ -13850,8 +13859,7 @@ if(mobSearchInput){
 
 /* ========================= Home-first search view ========================= */
 (function(){
-  // Start in home mode on initial load
-  document.body.classList.add('home-mode');
+  // home-mode is set inline on <body> at parse time so the app shell never flashes.
 
   function exitHome(){
     document.body.classList.remove('home-mode');
