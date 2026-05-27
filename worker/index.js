@@ -34,6 +34,7 @@ export default {
       if (path === "/unsplash") return await unsplash(url, env, origin);
       if (path === "/unsplash/track") return await unsplashTrack(url, env, origin);
       if (path === "/pexels") return await pexels(url, env, origin);
+      if (path === "/arena") return await arena(url, env, origin);
       if (path === "/og") return await ogScrape(url, env, origin, ctx);
       if (path === "/set") return await createSet(request, env, origin);
 
@@ -126,6 +127,36 @@ async function pexels(url, env, origin) {
     link: p.url,
     credit: p.photographer,
     creditUrl: p.photographer_url,
+  }));
+  return json({ results }, 200, origin, { "Cache-Control": "public, max-age=3600" });
+}
+
+/* ------------------------------ Are.na ----------------------------- */
+// api.are.na has been moved behind a Cloudflare bot challenge, so direct
+// browser fetches now 403. Proxy server-side with a browser-like UA and an
+// optional ARENA_TOKEN. Returns normalized {results:[{id,thumb,full,link}]}.
+async function arena(url, env, origin) {
+  const q = esc(url.searchParams.get("q"));
+  if (!q) return json({ error: "missing_q" }, 400, origin);
+  const api = "https://api.are.na/v2/search/blocks?per=12&q=" + encodeURIComponent(q);
+  const headers = {
+    "User-Agent": "Mozilla/5.0 (compatible; ReferenceRoomBot/1.0; +https://currentmethod.in)",
+    "Accept": "application/json",
+  };
+  if (env.ARENA_TOKEN) headers["Authorization"] = "Bearer " + env.ARENA_TOKEN;
+  let r;
+  try { r = await fetch(api, { headers, cf: { cacheTtl: 3600 } }); }
+  catch (e) { return json({ error: "arena_fetch_failed" }, 502, origin); }
+  if (!r.ok) return json({ error: "arena_upstream", status: r.status }, 502, origin);
+  let data;
+  try { data = await r.json(); } catch (e) { return json({ error: "arena_bad_json" }, 502, origin); }
+  const blocks = (data.blocks || data.results || []).filter((b) => b && b.image && (b.image.thumb || b.image.display));
+  const results = blocks.slice(0, 12).map((b) => ({
+    id: b.id,
+    thumb: (b.image.thumb || b.image.display || {}).url,
+    full: (b.image.display || b.image.original || b.image.thumb || {}).url,
+    link: "https://www.are.na/block/" + b.id,
+    title: b.title || "",
   }));
   return json({ results }, 200, origin, { "Cache-Control": "public, max-age=3600" });
 }

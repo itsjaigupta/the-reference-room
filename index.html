@@ -12432,7 +12432,10 @@ if(mobSearchInput){
   function afterStateChange(){updateRoleUI();const det=document.querySelector('.detail.active');if(det){makeTunedChipsDismissable(det);updatePanelHeader(det.dataset.anchor);}}
 
   /* ====================== INLINE EMBEDS (PR2) ====================== */
-  const ARENA_OK=true; // api.are.na is CORS-friendly; called from browser
+  // api.are.na was open until Cloudflare bot protection started 403-ing it.
+  // Prefer the worker proxy (with optional ARENA_TOKEN); fall back to direct fetch
+  // for older Worker deploys, then to a "search on Are.na" link if both fail.
+  const ARENA_OK=true;
   function embedQuery(card){
     const name=(card.querySelector('.card-name')||{}).textContent.trim();
     const fk=(typeof filterKeywords==='function')?filterKeywords():'';
@@ -12454,14 +12457,25 @@ if(mobSearchInput){
     const sec=document.createElement('div');sec.className='embed-sec';
     sec.innerHTML=secHead('Visual references','<a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">are.na ↗</a>')+'<div class="embed-loading">Loading Are.na…</div>';
     box.appendChild(sec);
-    fetch('https://api.are.na/v2/search/blocks?per=12&q='+encodeURIComponent(q))
+    // Prefer worker proxy (bypasses Are.na's Cloudflare bot block); fall back to direct.
+    const url=WORKER_BASE?(WORKER_BASE+'/arena?q='+encodeURIComponent(q))
+                        :('https://api.are.na/v2/search/blocks?per=12&q='+encodeURIComponent(q));
+    fetch(url)
       .then(r=>r.ok?r.json():Promise.reject(r.status))
       .then(d=>{
-        const blocks=(d.blocks||d.results||[]).filter(b=>b&&b.image&&(b.image.thumb||b.image.display));
-        if(!blocks.length){sec.querySelector('.embed-loading').outerHTML='<div class="embed-fallback">No Are.na blocks — <a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">search on Are.na ↗</a></div>';return;}
+        // Worker returns {results:[{id,thumb,link}]}; direct returns {blocks:[…]}.
+        let items=[];
+        if(Array.isArray(d.results)){
+          items=d.results.map(b=>({id:b.id,src:b.thumb||b.full,link:b.link||('https://www.are.na/block/'+b.id)}));
+        }else{
+          const blocks=(d.blocks||[]).filter(b=>b&&b.image&&(b.image.thumb||b.image.display));
+          items=blocks.map(b=>({id:b.id,src:(b.image.thumb||b.image.display).url,link:'https://www.are.na/block/'+b.id}));
+        }
+        if(!items.length){sec.querySelector('.embed-loading').outerHTML='<div class="embed-fallback">No Are.na blocks — <a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">search on Are.na ↗</a></div>';return;}
         const grid=document.createElement('div');grid.className='embed-grid';
-        blocks.slice(0,9).forEach(b=>{const src=(b.image.thumb||b.image.display).url;
-          grid.insertAdjacentHTML('beforeend','<a class="embed-cell" href="https://www.are.na/block/'+b.id+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(src)+'" alt=""></a>');});
+        items.slice(0,9).forEach(it=>{
+          grid.insertAdjacentHTML('beforeend','<a class="embed-cell" href="'+esc(it.link)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(it.src)+'" alt=""></a>');
+        });
         sec.querySelector('.embed-loading').replaceWith(grid);
       })
       .catch(()=>{const l=sec.querySelector('.embed-loading');if(l)l.outerHTML='<div class="embed-fallback">Are.na unavailable — <a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">open search ↗</a></div>';});

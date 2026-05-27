@@ -1,0 +1,12 @@
+# Files/dirs at repo root that Cloudflare Workers Static Assets should NOT
+# expose at currentmethod.in. The Worker still serves API routes for these.
+# Syntax = gitignore. Anything not listed here is publicly served.
+worker/
+.claude/
+.git/
+.gitignore
+chats/
+project/
+*.md
+node_modules/
+.DS_Store

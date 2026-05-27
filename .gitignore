@@ -1,0 +1,10 @@
+# Local editor / agent state
+.claude/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Anything secret-shaped
+*.env
+.env*

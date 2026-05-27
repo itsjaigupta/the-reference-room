@@ -2,19 +2,28 @@ name = "reference-room"
 main = "index.js"
 compatibility_date = "2024-11-01"
 
-# Public origin allowed to call this Worker. Use "*" while testing, then
-# lock it to your site before going live.
+# Workers Static Assets: serve index.html (and any other root files not listed
+# in ../.assetsignore) as static assets. The Worker still handles API routes
+# (/unsplash, /pexels, /arena, /og, /set, /set/:id) because no asset matches
+# those paths. Hash-based client routing (#/card/:slug) all hits "/" → index.html.
+[assets]
+directory = "../"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+# Public origin allowed to call this Worker. Locked to the production site;
+# flip back to "*" temporarily if you ever need to call the deployed Worker
+# from a different origin during debugging.
 [vars]
-ALLOW_ORIGIN = "*"
-# ALLOW_ORIGIN = "https://currentmethod.in"
+ALLOW_ORIGIN = "https://currentmethod.in"
+# ALLOW_ORIGIN = "*"
 
 # KV namespace for shared "pinned sets".
-# Create it once, then paste the id below:
-#   npx wrangler kv namespace create SETS
 [[kv_namespaces]]
 binding = "SETS"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
-# preview_id = "REPLACE_FOR_wrangler_dev"
+id = "85e9fed738064a5b9d999d092be2e0d0"
+# preview_id is for `wrangler dev` against remote KV; local dev uses miniflare's
+# in-memory KV automatically, so leaving this unset is fine.
 
 # Secrets are NOT stored here. Set them with:
 #   npx wrangler secret put UNSPLASH_KEY

@@ -15,6 +15,7 @@ adds Unsplash/Pexels image grids, OG previews, and short server-stored set IDs.
 | GET    | `/unsplash?q=`         | Proxied Unsplash search → normalized `{results:[…]}` |
 | GET    | `/unsplash/track?loc=` | Pings Unsplash `download_location` (required on use) |
 | GET    | `/pexels?q=`           | Proxied Pexels search → `{results:[…]}` |
+| GET    | `/arena?q=`            | Proxied Are.na search → `{results:[…]}` (bypasses CF bot block; uses optional `ARENA_TOKEN`) |
 | GET    | `/og?url=`             | Scrapes `{title,image,description,siteName}`, 24h edge cache |
 | POST   | `/set`                 | `{title, cards, ownerEditToken?}` → `{id, editToken}` |
 | GET    | `/set/:id`             | Full record (no edit token), no auth |
@@ -35,6 +36,8 @@ npx wrangler kv namespace create SETS
 # 2) add your API keys as secrets (never commit these)
 npx wrangler secret put UNSPLASH_KEY    # Unsplash "Access Key"
 npx wrangler secret put PEXELS_KEY      # Pexels API key
+# optional — without it, Are.na falls back to a search link
+npx wrangler secret put ARENA_TOKEN     # Are.na personal token (https://dev.are.na/)
 
 # 3) (recommended) lock the origin in wrangler.toml:
 #    ALLOW_ORIGIN = "https://currentmethod.in"
