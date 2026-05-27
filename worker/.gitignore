@@ -1,0 +1,11 @@
+# local dev secrets for `wrangler dev` — NEVER commit these
+.dev.vars
+.dev.vars.*
+
+# wrangler local state / build output
+.wrangler/
+dist/
+node_modules/
+
+# logs
+*.log
