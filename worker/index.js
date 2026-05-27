@@ -35,6 +35,7 @@ export default {
       if (path === "/unsplash/track") return await unsplashTrack(url, env, origin);
       if (path === "/pexels") return await pexels(url, env, origin);
       if (path === "/arena") return await arena(url, env, origin);
+      if (path === "/pinterest/oembed") return await pinterestOembed(url, env, origin, ctx);
       if (path === "/og") return await ogScrape(url, env, origin, ctx);
       if (path === "/set") return await createSet(request, env, origin);
 
@@ -159,6 +160,54 @@ async function arena(url, env, origin) {
     title: b.title || "",
   }));
   return json({ results }, 200, origin, { "Cache-Control": "public, max-age=3600" });
+}
+
+/* ---------------------------- Pinterest ---------------------------- */
+// Public oEmbed (no auth). Used to hydrate curated pin URLs into thumbnails
+// so the client can render a grid that links back to Pinterest. 24h edge cache.
+// Pinterest has no public search API — use site search URLs as link-outs.
+async function pinterestOembed(url, env, origin, ctx) {
+  const target = url.searchParams.get("url");
+  if (!target || !/^https?:\/\/([a-z]+\.)?pinterest\.[a-z.]+\//i.test(target)) {
+    return json({ error: "bad_url" }, 400, origin);
+  }
+  const cache = caches.default;
+  const cacheKey = new Request("https://pinterest-oembed-cache/" + encodeURIComponent(target), { method: "GET" });
+  const cached = await cache.match(cacheKey);
+  if (cached) {
+    const body = await cached.json();
+    return json(body, 200, origin, { "Cache-Control": "public, max-age=86400", "X-Cache": "HIT" });
+  }
+  const api = "https://www.pinterest.com/oembed.json?url=" + encodeURIComponent(target);
+  let r;
+  try {
+    r = await fetch(api, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; ReferenceRoomBot/1.0; +https://currentmethod.in)", "Accept": "application/json" },
+      cf: { cacheTtl: DAY },
+    });
+  } catch (e) {
+    return json({ error: "pinterest_fetch_failed" }, 502, origin);
+  }
+  if (!r.ok) return json({ error: "pinterest_upstream", status: r.status }, 502, origin);
+  let data;
+  try { data = await r.json(); } catch (e) { return json({ error: "pinterest_bad_json" }, 502, origin); }
+  // Pinterest's oEmbed returns a 236x thumbnail. Their CDN serves the same
+  // image at /474x/ and /736x/ — swap in 474x for a sharper grid cell.
+  const rawThumb = data.thumbnail_url || "";
+  const upThumb = rawThumb.replace(/\/236x\//, "/474x/");
+  const result = {
+    url: target,
+    thumb: upThumb || rawThumb,
+    thumbSmall: rawThumb,
+    width: data.thumbnail_width || 0,
+    height: data.thumbnail_height || 0,
+    title: data.title || "",
+    author: data.author_name || "",
+    authorUrl: data.author_url || "",
+  };
+  const resp = json(result, 200, origin, { "Cache-Control": "public, max-age=86400", "X-Cache": "MISS" });
+  ctx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(result), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=86400" } })));
+  return resp;
 }
 
 /* ------------------------------- OG -------------------------------- */
