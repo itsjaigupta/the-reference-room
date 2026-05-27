@@ -1994,6 +1994,12 @@ html[data-theme="light"] .pins-actions .pin-btn { background: var(--panel-3); }
 
 /* ---- empty pinned section: hide instead of show placeholder ---- */
 #sb-pinned[data-empty="1"] { display: none; }
+
+/* ---- Pinterest-only main panel ----
+   Hide all legacy multi-platform link blocks and "Open Top 5" action button.
+   Only the Notes textarea block remains in the main detail panel.          */
+.detail-block:has(.detail-links) { display: none; }
+.detail-actions { display: none; }
 </style>
 </head>
 <body>
