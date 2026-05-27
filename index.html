@@ -2217,9 +2217,210 @@ html[data-theme="light"] .sf-group-head:hover { background: rgba(0,0,0,0.03); }
   font-weight: 600;
 }
 .sf-opt.active:hover { filter: brightness(1.08); }
+
+/* ====================== Home (search-first) view ====================== */
+body.home-mode .app { display: none !important; }
+
+.home-hero {
+  display: none;
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 50;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+body.home-mode .home-hero { display: flex; }
+
+/* Subtle pink glow background */
+.home-hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 50% 35%, rgba(229,64,126,0.10), transparent 70%),
+    radial-gradient(ellipse 800px 500px at 50% 100%, rgba(229,64,126,0.05), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-inner {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 720px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.home-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 42px; font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.home-brand::before {
+  content: "";
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  align-self: center;
+  box-shadow: 0 0 0 5px var(--accent-tint), 0 0 32px var(--accent-tint-2);
+}
+.home-tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px; color: var(--text-3);
+  letter-spacing: 0.02em; margin-top: -16px;
+}
+
+.home-search-wrap {
+  width: 100%; position: relative;
+  display: flex; align-items: center;
+}
+.home-search-icon {
+  position: absolute; left: 22px; top: 50%;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+.home-search {
+  width: 100%; padding: 22px 80px 22px 56px;
+  background: var(--panel);
+  border: 0; outline: none;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0.5px var(--line-2), 0 12px 40px rgba(0,0,0,0.4);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 16px; letter-spacing: -0.005em;
+  transition: box-shadow 0.2s;
+}
+.home-search:focus {
+  box-shadow: 0 0 0 1.5px var(--accent), 0 12px 50px rgba(229,64,126,0.25);
+}
+.home-search::placeholder { color: var(--text-3); }
+.home-search-go {
+  position: absolute; right: 10px; top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: 0; border-radius: 999px;
+  padding: 11px 22px;
+  color: #fff; font: inherit;
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.3);
+  transition: filter 0.15s, transform 0.1s;
+}
+.home-search-go:hover { filter: brightness(1.1); }
+.home-search-go:active { transform: translateY(-50%) scale(0.97); }
+.home-search-go:disabled { opacity: 0.55; pointer-events: none; }
+
+.home-suggest {
+  display: flex; flex-wrap: wrap;
+  gap: 7px; justify-content: center;
+  max-width: 600px;
+}
+.home-suggest-chip {
+  background: transparent;
+  border: 0;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  color: var(--text-2);
+  font: inherit; font-size: 12px;
+  padding: 6px 13px; border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: -0.003em;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.home-suggest-chip:hover { background: var(--accent-tint); color: var(--accent); box-shadow: 0 0 0 0.5px var(--accent); }
+
+.home-results {
+  width: 100%; min-height: 80px;
+  display: none;
+  flex-direction: column; gap: 8px;
+}
+.home-results.show { display: flex; }
+.home-results-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-3);
+  margin-bottom: 4px; text-align: left;
+}
+.home-result-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  background: var(--panel);
+  border-radius: 12px;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  text-decoration: none; color: var(--text);
+  font-size: 14px; letter-spacing: -0.003em;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.home-result-item:hover {
+  background: var(--accent-tint); box-shadow: 0 0 0 1px var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.home-result-item .hr-arrow { color: var(--accent); flex-shrink: 0; font-size: 16px; }
+
+.home-foot {
+  position: absolute; bottom: 24px; left: 0; right: 0;
+  display: flex; justify-content: center; align-items: center; gap: 24px;
+  z-index: 2;
+}
+.home-foot-link {
+  background: transparent; border: 0;
+  color: var(--text-3); font: inherit; font-size: 12.5px;
+  cursor: pointer; padding: 6px 10px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: -0.003em;
+  transition: color 0.15s;
+}
+.home-foot-link:hover { color: var(--accent); }
+
+.home-status { color: var(--text-3); font-size: 13px; padding: 12px 0; text-align: center; }
+.home-status.error { color: var(--hot); }
+
+@media (max-width: 600px) {
+  .home-brand { font-size: 32px; }
+  .home-search { padding: 16px 70px 16px 48px; font-size: 14px; }
+  .home-search-icon { left: 18px; width: 16px; height: 16px; }
+  .home-search-go { padding: 9px 16px; font-size: 11.5px; }
+}
 </style>
 </head>
 <body>
+
+<!-- ============= SEARCH-FIRST HOME VIEW ============= -->
+<section class="home-hero" id="home-hero">
+  <div class="home-inner">
+    <div class="home-brand">The Reference Room</div>
+    <div class="home-tagline">currentmethod.in · visual references for film & ads</div>
+
+    <div class="home-search-wrap">
+      <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input class="home-search" id="home-search-input" type="text" autocomplete="off" placeholder="Describe what you're looking for — scene, mood, era, anything…" autofocus>
+      <button class="home-search-go" id="home-search-go" onclick="homeSearch()">Search ✦</button>
+    </div>
+
+    <div class="home-suggest" id="home-suggest">
+      <button class="home-suggest-chip" onclick="homePrefill('moody Mumbai bedroom at night warm tungsten')">moody Mumbai bedroom</button>
+      <button class="home-suggest-chip" onclick="homePrefill('Diwali decor warm lights joint family home')">Diwali joint family</button>
+      <button class="home-suggest-chip" onclick="homePrefill('70s Indian living room joint family golden afternoon')">70s living room</button>
+      <button class="home-suggest-chip" onclick="homePrefill('cyclorama studio white background heist thieves')">cyc heist scene</button>
+      <button class="home-suggest-chip" onclick="homePrefill('monsoon street Mumbai night neon')">monsoon Mumbai night</button>
+      <button class="home-suggest-chip" onclick="homePrefill('intimate couple argument cramped flat')">couple argument flat</button>
+    </div>
+
+    <div class="home-results" id="home-results"></div>
+  </div>
+
+  <div class="home-foot">
+    <button class="home-foot-link" onclick="exitHome()">Browse all scenes →</button>
+    <button class="home-foot-link" onclick="document.getElementById('theme-btn').click()">Appearance</button>
+  </div>
+</section>
 
 <div class="app">
   <aside class="sidebar">
@@ -13645,6 +13846,89 @@ if(mobSearchInput){
   window.switchAITab=switchAITab;
   window.runAIQuery=runAIQuery;
   window.runAIScript=runAIScript;
+})();
+
+/* ========================= Home-first search view ========================= */
+(function(){
+  // Start in home mode on initial load
+  document.body.classList.add('home-mode');
+
+  function exitHome(){
+    document.body.classList.remove('home-mode');
+  }
+  function enterHome(){
+    document.body.classList.add('home-mode');
+    setTimeout(()=>{const i=document.getElementById('home-search-input');if(i){i.value='';i.focus();}},50);
+    const res=document.getElementById('home-results'); if(res){res.classList.remove('show'); res.innerHTML='';}
+  }
+  function homePrefill(text){
+    const inp=document.getElementById('home-search-input');
+    if(inp){ inp.value=text; inp.focus(); }
+    homeSearch();
+  }
+  function homeEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  async function homeSearch(){
+    const inp=document.getElementById('home-search-input');
+    const res=document.getElementById('home-results');
+    const btn=document.getElementById('home-search-go');
+    const q=(inp.value||'').trim();
+    if(!q){inp.focus();return;}
+    const WORKER=(window.REFROOM_WORKER_BASE||'').replace(/\/+$/,'');
+    if(!WORKER){
+      // Fallback: just open Pinterest with the literal query
+      window.open('https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q),'_blank','noopener');
+      return;
+    }
+    btn.disabled=true;
+    res.classList.add('show');
+    res.innerHTML='<div class="home-status">Composing queries with AI…</div>';
+    try{
+      const r=await fetch(WORKER+'/ai/query',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({description:q})
+      });
+      const d=await r.json();
+      if(d.error){
+        // Fallback to direct Pinterest search
+        res.innerHTML='<div class="home-status error">AI unavailable — opening direct Pinterest search…</div>';
+        setTimeout(()=>{ window.open('https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q),'_blank','noopener'); },400);
+        return;
+      }
+      const queries=(d.queries||[]).filter(Boolean);
+      if(!queries.length){
+        res.innerHTML='<div class="home-status">No queries returned. <a href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener" style="color:var(--accent)">Search Pinterest directly ↗</a></div>';
+        return;
+      }
+      res.innerHTML=
+        '<div class="home-results-label">AI-composed Pinterest searches — pick one</div>'+
+        queries.map(qq=>
+          '<a class="home-result-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(qq)+'" target="_blank" rel="noopener">'+
+            '<span class="hr-arrow">↗</span>'+homeEsc(qq)+
+          '</a>'
+        ).join('');
+    }catch(e){
+      res.innerHTML='<div class="home-status error">Request failed. <a href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener" style="color:var(--accent)">Open Pinterest directly ↗</a></div>';
+    }finally{
+      btn.disabled=false;
+    }
+  }
+
+  // Submit on Enter
+  document.addEventListener('keydown',e=>{
+    if(!document.body.classList.contains('home-mode')) return;
+    if(e.key==='Enter'){
+      const inp=document.getElementById('home-search-input');
+      if(inp && document.activeElement===inp){ e.preventDefault(); homeSearch(); }
+    }
+  });
+
+  // Expose globally
+  window.exitHome=exitHome;
+  window.enterHome=enterHome;
+  window.homeSearch=homeSearch;
+  window.homePrefill=homePrefill;
 })();
 </script>
 
