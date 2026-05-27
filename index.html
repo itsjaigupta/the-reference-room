@@ -12440,12 +12440,11 @@ function refreshOpenPanel(){
   if(typeof injectEmbeds==='function') injectEmbeds(detail, card);
 }
 
-// keyboard: R role, F filter focus — no modifier keys allowed (preserve Ctrl+R / Ctrl+Shift+R browser reload)
+// keyboard: F = focus first filter (R removed — was intercepting browser reload)
 document.addEventListener('keydown', e=>{
   const tag=document.activeElement.tagName, inField=tag==='INPUT'||tag==='TEXTAREA';
   if(inField) return;
-  if(e.ctrlKey||e.metaKey||e.altKey) return; // let browser handle Ctrl+R, Ctrl+Shift+R, etc.
-  if(e.key==='r'||e.key==='R'){ e.preventDefault(); openRoleSheet(); }
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
   if(e.key==='f'||e.key==='F'){ e.preventDefault(); const btn=document.querySelector('.filter-btn'); if(btn) btn.click(); }
 });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeRoleSheet(); closeFilterPop(); }});
@@ -13123,7 +13122,7 @@ if(mobSearchInput){
     if(mod&&e.shiftKey&&(e.key==='k'||e.key==='K')){e.preventDefault();e.stopImmediatePropagation();window.clearFilters();toast('Filters cleared');return;}
     if(mod&&e.key===','){e.preventDefault();e.stopImmediatePropagation();document.getElementById('theme-btn').click();return;}
     if(!mod&&(e.key==='j'||e.key==='k')){e.preventDefault();moveGrid(e.key==='j'?1:-1);return;}
-    if(!mod&&(e.key==='r'||e.key==='R')){e.preventDefault();e.stopImmediatePropagation();window.openRoleSheet();return;}
+    // R shortcut removed — was intercepting browser Ctrl+Shift+R reload
   },true);
 
   /* ---- j/k grid navigation ---- */
