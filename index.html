@@ -12440,10 +12440,11 @@ function refreshOpenPanel(){
   if(typeof injectEmbeds==='function') injectEmbeds(detail, card);
 }
 
-// keyboard: R role, F filter focus
+// keyboard: R role, F filter focus — no modifier keys allowed (preserve Ctrl+R / Ctrl+Shift+R browser reload)
 document.addEventListener('keydown', e=>{
   const tag=document.activeElement.tagName, inField=tag==='INPUT'||tag==='TEXTAREA';
   if(inField) return;
+  if(e.ctrlKey||e.metaKey||e.altKey) return; // let browser handle Ctrl+R, Ctrl+Shift+R, etc.
   if(e.key==='r'||e.key==='R'){ e.preventDefault(); openRoleSheet(); }
   if(e.key==='f'||e.key==='F'){ e.preventDefault(); const btn=document.querySelector('.filter-btn'); if(btn) btn.click(); }
 });
