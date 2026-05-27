@@ -12208,75 +12208,86 @@ localStorage.setItem(ROLE_KEY,currentRole);
 // ---- FILTERS (10 dimensions, single-select each) -------------------
 const FILTER_KEY='refhub_filters_v3';
 const FILTER_DIMS={
-  color:{label:'Color', sub:'Tonal palette',
-    opts:[{v:'warm',l:'Warm',q:'warm tones golden'},{v:'cool',l:'Cool',q:'cool tones blue'},
-    {v:'monochrome',l:'Monochrome',q:'monochrome black and white'},{v:'saffron',l:'Saffron / Gold',q:'saffron gold marigold'},
-    {v:'earthy',l:'Earthy',q:'earthy terracotta brown'},{v:'pastel',l:'Pastel',q:'pastel soft'},
-    {v:'vivid',l:'Vivid',q:'vivid saturated colorful'},{v:'desat',l:'Desaturated',q:'desaturated muted'},{v:'jewel',l:'Jewel',q:'jewel tones emerald magenta sapphire'}]},
-  time:{label:'Time of day', sub:'Light quality',
-    opts:[{v:'golden',l:'Golden hour',q:'golden hour'},{v:'blue',l:'Blue hour',q:'blue hour'},
-    {v:'midday',l:'Midday',q:'midday harsh sun'},{v:'overcast',l:'Overcast',q:'overcast soft daylight'},
-    {v:'dawn',l:'Dawn',q:'dawn early morning mist'},{v:'night',l:'Night',q:'night low light'},{v:'twilight',l:'Twilight',q:'twilight dusk'}]},
-  mood:{label:'Mood', sub:'Emotional register',
-    opts:[{v:'intimate',l:'Intimate',q:'intimate quiet'},{v:'epic',l:'Epic',q:'epic grand cinematic'},
-    {v:'melancholic',l:'Melancholic',q:'melancholic somber'},{v:'joyful',l:'Joyful',q:'joyful playful warm'},
-    {v:'gritty',l:'Gritty',q:'gritty raw documentary'},{v:'dreamy',l:'Dreamy',q:'dreamy soft hazy'},
-    {v:'tense',l:'Tense',q:'tense suspense moody'},{v:'romantic',l:'Romantic',q:'romantic soft warm'},
-    {v:'nostalgic',l:'Nostalgic',q:'nostalgic retro analog'}]},
-  weather:{label:'Weather', sub:'Atmospheric layer',
-    opts:[{v:'monsoon',l:'Monsoon / Rain',q:'monsoon rain wet'},{v:'fog',l:'Fog / Mist',q:'fog mist haze'},
-    {v:'dust',l:'Dust storm',q:'dust storm arid'},{v:'snow',l:'Snow',q:'snow winter'},
-    {v:'hot',l:'Hot dry',q:'hot harsh summer'},{v:'humid',l:'Humid',q:'humid sweaty tropical'}]},
-  treatment:{label:'Treatment', sub:'Where it shoots',
-    opts:[{v:'cyc',l:'On Cyc',q:'white cyclorama infinity cove studio set design'},
-    {v:'location',l:'On Location',q:'real location interior practical lighting'},
-    {v:'mixed',l:'Mixed',q:''}]},
-  occasion:{label:'Occasion', sub:'Festival / event',
-    opts:[{v:'diwali',l:'Diwali',q:'diwali diya lamps'},{v:'holi',l:'Holi',q:'holi colors gulal'},
-    {v:'wedding',l:'Wedding',q:'indian wedding'},{v:'eid',l:'Eid',q:'eid celebration'},
-    {v:'christmas',l:'Christmas',q:'christmas warm lights'},{v:'navratri',l:'Navratri / Garba',q:'navratri garba'},
-    {v:'onam',l:'Onam',q:'onam pookalam kerala'},{v:'pongal',l:'Pongal',q:'pongal sankranti'},
-    {v:'birthday',l:'Birthday',q:'birthday party decor'},{v:'newyear',l:'New Year',q:'new year eve party'},
-    {v:'regular',l:'Non-occasion',q:''}]},
-  character:{label:'Character', sub:'Who is in frame',
-    opts:[{v:'youngwoman',l:'Young woman',q:'young woman portrait'},{v:'youngman',l:'Young man',q:'young man portrait'},
-    {v:'couple',l:'Couple',q:'couple two people'},{v:'family',l:'Family',q:'indian family'},
-    {v:'child',l:'Child',q:'child kid'},{v:'teen',l:'Teen',q:'teenager gen z'},
-    {v:'elderly',l:'Elderly',q:'elderly grandparent'},{v:'group',l:'Group / friends',q:'group of friends'},
-    {v:'professional',l:'Professional at work',q:'professional working'},{v:'none',l:'No people',q:'no people empty space'}]},
-  era:{label:'Era / period', sub:'Time setting',
-    opts:[{v:'contemporary',l:'Contemporary',q:'contemporary modern'},{v:'2010s',l:'2010s',q:'2010s smartphone era'},
-    {v:'2000s',l:'2000s / Y2K',q:'2000s y2k early millennium'},{v:'90s',l:'90s',q:'1990s nostalgia analog'},
-    {v:'80s',l:'70s–80s',q:'1970s 1980s vintage retro'},{v:'preindep',l:'Pre-independence',q:'colonial pre independence india vintage'},
-    {v:'futuristic',l:'Futuristic',q:'futuristic near future scifi'}]},
-  region:{label:'Region', sub:'Geography',
-    opts:[{v:'north',l:'North India',q:'north india delhi punjab'},{v:'south',l:'South India',q:'south india chennai bangalore kerala'},
-    {v:'west',l:'West India',q:'west india mumbai gujarat rajasthan'},{v:'east',l:'East India',q:'east india kolkata bengal'},
-    {v:'rural',l:'Rural India',q:'rural india village'},{v:'mountain',l:'Mountain / Himalaya',q:'himalaya mountain hill station'},
-    {v:'coastal',l:'Coastal',q:'coastal beach goa'},{v:'global',l:'Global / non-India',q:''}]},
-  klass:{label:'Class / Setting', sub:'Socio-economic',
-    opts:[{v:'lowermiddle',l:'Lower-middle',q:'lower middle class chawl'},{v:'middle',l:'Middle class',q:'middle class indian family'},
-    {v:'uppermiddle',l:'Upper-middle',q:'upper middle class apartment'},{v:'luxury',l:'Luxury',q:'luxury premium high end'},
-    {v:'rural',l:'Rural',q:'rural village home'},{v:'urban',l:'Urban',q:'urban metropolitan city'}]},
-  medium:{label:'Medium output', sub:'What you’re making',
-    opts:[{v:'ad',l:'Ad film / TVC',q:'ad film commercial tvc'},{v:'mv',l:'Music video',q:'music video'},
-    {v:'fashionfilm',l:'Fashion film',q:'fashion film narrative'},{v:'fasheditorial',l:'Fashion editorial',q:'fashion editorial campaign'},
-    {v:'reel',l:'Reel / Short vertical',q:'instagram reel vertical short'},{v:'ugc',l:'UGC handheld',q:'ugc handheld documentary'},
-    {v:'print',l:'Print / OOH',q:'print campaign ooh billboard'},{v:'lookbook',l:'Lookbook',q:'lookbook brand catalog'},
-    {v:'product',l:'Product still life',q:'product still life ecommerce'},{v:'beauty',l:'Beauty close-up',q:'beauty closeup macro'},
-    {v:'food',l:'Food commercial',q:'food commercial styling'},{v:'wedding',l:'Wedding film',q:'wedding cinematography candid'}]},
-  lens:{label:'Camera / Lens', sub:'Image feel',
-    opts:[{v:'anamorphic',l:'Anamorphic',q:'anamorphic widescreen lens flare'},{v:'35mm',l:'35mm film',q:'35mm film grain'},
-    {v:'16mm',l:'16mm film',q:'16mm grainy film'},{v:'medium',l:'Medium format',q:'medium format hasselblad'},
-    {v:'wide',l:'Wide angle',q:'wide angle 24mm'},{v:'tele',l:'Telephoto',q:'telephoto compressed 85mm'},
-    {v:'macro',l:'Macro',q:'macro close detail'},{v:'vertical',l:'Vertical phone',q:'vertical 9:16 phone shot'},
-    {v:'drone',l:'Drone / aerial',q:'drone aerial top down'},{v:'handheld',l:'Handheld',q:'handheld shaky documentary'}]}
+  color:{label:’Color’, sub:’Tonal palette’,
+    opts:[{v:’warm’,l:’Warm’,q:’warm tones’},{v:’cool’,l:’Cool’,q:’cool blue’},
+    {v:’monochrome’,l:’Monochrome’,q:’black white’},{v:’saffron’,l:’Saffron / Gold’,q:’gold marigold’},
+    {v:’earthy’,l:’Earthy’,q:’earthy terracotta’},{v:’pastel’,l:’Pastel’,q:’pastel soft’},
+    {v:’vivid’,l:’Vivid’,q:’vivid colorful’},{v:’desat’,l:’Desaturated’,q:’muted desaturated’},{v:’jewel’,l:’Jewel’,q:’jewel tones’}]},
+  time:{label:’Time of day’, sub:’Light quality’,
+    opts:[{v:’golden’,l:’Golden hour’,q:’golden hour’},{v:’blue’,l:’Blue hour’,q:’blue hour’},
+    {v:’midday’,l:’Midday’,q:’harsh daylight’},{v:’overcast’,l:’Overcast’,q:’overcast soft’},
+    {v:’dawn’,l:’Dawn’,q:’early morning’},{v:’night’,l:’Night’,q:’night interior’},{v:’twilight’,l:’Twilight’,q:’dusk twilight’}]},
+  mood:{label:’Mood’, sub:’Emotional register’,
+    opts:[{v:’intimate’,l:’Intimate’,q:’intimate cozy’},{v:’epic’,l:’Epic’,q:’cinematic epic’},
+    {v:’melancholic’,l:’Melancholic’,q:’melancholic moody’},{v:’joyful’,l:’Joyful’,q:’joyful warm’},
+    {v:’gritty’,l:’Gritty’,q:’gritty raw’},{v:’dreamy’,l:’Dreamy’,q:’dreamy hazy’},
+    {v:’tense’,l:’Tense’,q:’tense suspense’},{v:’romantic’,l:’Romantic’,q:’romantic soft’},
+    {v:’nostalgic’,l:’Nostalgic’,q:’nostalgic retro’}]},
+  weather:{label:’Weather’, sub:’Atmospheric layer’,
+    opts:[{v:’monsoon’,l:’Monsoon / Rain’,q:’monsoon rain’},{v:’fog’,l:’Fog / Mist’,q:’foggy misty’},
+    {v:’dust’,l:’Dust storm’,q:’dusty arid’},{v:’snow’,l:’Snow’,q:’winter snow’},
+    {v:’hot’,l:’Hot dry’,q:’harsh summer’},{v:’humid’,l:’Humid’,q:’tropical humid’}]},
+  treatment:{label:’Treatment’, sub:’Where it shoots’,
+    opts:[{v:’cyc’,l:’On Cyc’,q:’white cyclorama studio’},
+    {v:’location’,l:’On Location’,q:’’},
+    {v:’mixed’,l:’Mixed’,q:’’}]},
+  occasion:{label:’Occasion’, sub:’Festival / event’,
+    opts:[{v:’diwali’,l:’Diwali’,q:’diwali diyas’},{v:’holi’,l:’Holi’,q:’holi gulal’},
+    {v:’wedding’,l:’Wedding’,q:’indian wedding’},{v:’eid’,l:’Eid’,q:’eid decor’},
+    {v:’christmas’,l:’Christmas’,q:’christmas lights’},{v:’navratri’,l:’Navratri / Garba’,q:’navratri garba’},
+    {v:’onam’,l:’Onam’,q:’onam kerala’},{v:’pongal’,l:’Pongal’,q:’pongal’},
+    {v:’birthday’,l:’Birthday’,q:’birthday decor’},{v:’newyear’,l:’New Year’,q:’new year party’},
+    {v:’regular’,l:’Non-occasion’,q:’’}]},
+  character:{label:’Character’, sub:’Who is in frame’,
+    opts:[{v:’youngwoman’,l:’Young woman’,q:’woman’},{v:’youngman’,l:’Young man’,q:’man’},
+    {v:’couple’,l:’Couple’,q:’couple’},{v:’family’,l:’Family’,q:’family’},
+    {v:’child’,l:’Child’,q:’kids’},{v:’teen’,l:’Teen’,q:’teen’},
+    {v:’elderly’,l:’Elderly’,q:’elderly’},{v:’group’,l:’Group / friends’,q:’friends group’},
+    {v:’professional’,l:’Professional at work’,q:’professional’},{v:’none’,l:’No people’,q:’’}]},
+  era:{label:’Era / period’, sub:’Time setting’,
+    opts:[{v:’contemporary’,l:’Contemporary’,q:’’},{v:’2010s’,l:’2010s’,q:’2010s’},
+    {v:’2000s’,l:’2000s / Y2K’,q:’y2k 2000s’},{v:’90s’,l:’90s’,q:’1990s’},
+    {v:’80s’,l:’70s–80s’,q:’vintage retro’},{v:’preindep’,l:’Pre-independence’,q:’colonial vintage india’},
+    {v:’futuristic’,l:’Futuristic’,q:’futuristic’}]},
+  region:{label:’Region’, sub:’Geography’,
+    opts:[{v:’north’,l:’North India’,q:’north india’},{v:’south’,l:’South India’,q:’south india’},
+    {v:’west’,l:’West India’,q:’mumbai gujarat’},{v:’east’,l:’East India’,q:’kolkata bengal’},
+    {v:’rural’,l:’Rural India’,q:’rural village’},{v:’mountain’,l:’Mountain / Himalaya’,q:’himalaya hills’},
+    {v:’coastal’,l:’Coastal’,q:’coastal goa’},{v:’global’,l:’Global / non-India’,q:’’}]},
+  klass:{label:’Class / Setting’, sub:’Socio-economic’,
+    opts:[{v:’lowermiddle’,l:’Lower-middle’,q:’chawl’},{v:’middle’,l:’Middle class’,q:’middle class’},
+    {v:’uppermiddle’,l:’Upper-middle’,q:’apartment premium’},{v:’luxury’,l:’Luxury’,q:’luxury’},
+    {v:’rural’,l:’Rural’,q:’rural’},{v:’urban’,l:’Urban’,q:’urban city’}]},
+  medium:{label:’Medium output’, sub:’What you’re making’,
+    opts:[{v:’ad’,l:’Ad film / TVC’,q:’’},{v:’mv’,l:’Music video’,q:’music video’},
+    {v:’fashionfilm’,l:’Fashion film’,q:’fashion’},{v:’fasheditorial’,l:’Fashion editorial’,q:’editorial’},
+    {v:’reel’,l:’Reel / Short vertical’,q:’vertical reel’},{v:’ugc’,l:’UGC handheld’,q:’handheld’},
+    {v:’print’,l:’Print / OOH’,q:’’},{v:’lookbook’,l:’Lookbook’,q:’lookbook’},
+    {v:’product’,l:’Product still life’,q:’still life’},{v:’beauty’,l:’Beauty close-up’,q:’beauty’},
+    {v:’food’,l:’Food commercial’,q:’food styling’},{v:’wedding’,l:’Wedding film’,q:’wedding’}]},
+  lens:{label:’Camera / Lens’, sub:’Image feel’,
+    opts:[{v:’anamorphic’,l:’Anamorphic’,q:’anamorphic’},{v:’35mm’,l:’35mm film’,q:’film grain’},
+    {v:’16mm’,l:’16mm film’,q:’16mm grainy’},{v:’medium’,l:’Medium format’,q:’medium format’},
+    {v:’wide’,l:’Wide angle’,q:’wide angle’},{v:’tele’,l:’Telephoto’,q:’telephoto’},
+    {v:’macro’,l:’Macro’,q:’macro’},{v:’vertical’,l:’Vertical phone’,q:’vertical’},
+    {v:’drone’,l:’Drone / aerial’,q:’drone aerial’},{v:’handheld’,l:’Handheld’,q:’handheld’}]}
 };
 const FILTER_ORDER=['treatment','color','time','mood','weather','occasion','character','era','region','klass','medium','lens'];
 let filters=JSON.parse(localStorage.getItem(FILTER_KEY)||'{}');
 
 function filterKeywords(){
-  return FILTER_ORDER.map(d=>{const v=filters[d]; if(!v) return ''; const o=FILTER_DIMS[d].opts.find(x=>x.v===v); return o?o.q:''}).filter(Boolean).join(' ');
+  // Pinterest-priority order — most visually searchable first.
+  // Cap total output at ~4 words so queries stay usable.
+  const PRIORITY=['mood','time','occasion','klass','region','era','weather','color','treatment','character'];
+  const parts=[];
+  for(const d of PRIORITY){
+    const v=filters[d]; if(!v) continue;
+    const o=FILTER_DIMS[d].opts.find(x=>x.v===v);
+    if(!o||!o.q) continue;
+    parts.push(o.q);
+    if(parts.join(' ').trim().split(/\s+/).length>=4) break;
+  }
+  return parts.join(' ').trim();
 }
 function renderFilterUI(){
   let activeCount=0;
@@ -12564,9 +12575,37 @@ function renderPropRow(detail, card){
   const chips=cl.map(c=>'<button class="prop-chip" onclick="onPropChip(\''+name.replace(/'/g,"\\'")+'\',\''+c.replace(/'/g,"\\'")+'\')">'+c+'</button>').join('');
   row.innerHTML='<h3>Prop &amp; set clusters</h3><div class="prop-chips">'+chips+'</div>';
 }
+// Map prop cluster display names → concise Pinterest search terms
+const PROP_PINTEREST={
+  'Base furniture':'furniture','Lighting fixtures':'lighting','Wall décor':'wall decor',
+  'Tech & gadgets':'gadgets setup','Personal items':'personal items',
+  'Textiles & soft furnishings':'textiles','Bedding & pillows':'bedding',
+  'Bedside table & lamp':'bedside lamp','Bed & headboard':'bed headboard',
+  'Wardrobe':'wardrobe almirah','Wall art / photos':'wall art',
+  'Personal clutter':'cluttered','Vanity & mirror':'vanity mirror',
+  'Shower fixtures':'shower bathroom','Toiletries':'bathroom shelf',
+  'Plants & planters':'plants','Outdoor furniture':'outdoor furniture',
+  'Cookware':'cookware kitchen','Appliances':'appliances','Pantry & spices':'pantry spices',
+  'Desks & seating':'desk setup','Stationery':'stationery','Plants':'plants',
+  'Tables & seating':'dining furniture','Tableware':'tableware','Bar tools & glassware':'bar glassware',
+  'Signage & boards':'signage','Street vendors':'street vendor',
+  'Luggage & bags':'luggage bags','Diyas / lamps':'diyas lamps',
+  'Rangoli':'rangoli','Flowers / torans':'flower decor',
+  'Hero prop set':'props setup','Practical lighting':'practical lights',
+  'Sports gear':'sports gear','Picnic / camp props':'picnic camping',
+  'Bed & headboard':'bed','Books & bags':'books stationery',
+  'Mandap / stage':'mandap stage','Florals & garlands':'florals garlands',
+  'Mirrors & chairs':'salon chair mirror','Hair tools':'hair styling tools',
+  'Treadmills / weights':'gym weights','Mats & towels':'yoga mat',
+  'Coffee mugs':'coffee mug','Monitor & laptops':'desk monitor',
+  'Espresso machine':'espresso','Tables & chairs':'cafe furniture',
+  'Produce displays':'market produce','Idols / incense':'temple idol',
+  'Curtain partitions':'hospital curtain','IV stands & drips':'IV drip'
+};
 function onPropChip(name, cluster){
-  // open a refined search: scene + cluster + role + filters
-  const q=tunedQuery(name+' '+cluster);
+  const term=PROP_PINTEREST[cluster]||(cluster.toLowerCase().split(/[\s&\/]+/).slice(0,2).join(' '));
+  const fk=filterKeywords();
+  const q=(name+' '+term+(fk?' '+fk:'')).trim().replace(/\s+/g,' ');
   window.open(B.pinterest(q), '_blank', 'noopener');
 }
 function renderReelRow(detail, card){
