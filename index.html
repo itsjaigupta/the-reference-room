@@ -12395,25 +12395,25 @@ const B={
 // ---- MEDIA TYPE CHIPS ----------------------------------------------
 const MEDIA={
   stills:{label:'Stills', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg>',
-    build:t=>[B.pinterest(t),B.unsplash(t),B.arena(t),B.shotcafe(t),B.filmgrab(t)]},
+    build:t=>[B.pinterest(t)]},
   loops:{label:'Loops', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 4v4h-4"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 20v-4h4"/></svg>',
-    build:t=>[B.pinterestLoop(t),B.arenaMotion(t),B.vimeoLoop(t)]},
+    build:t=>[B.pinterestLoop(t)]},
   videos:{label:'Videos', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg>',
-    build:t=>[B.youtubeVid(t),B.vimeo(t),B.pexelsVid(t),B.cosmos(t)]},
+    build:t=>[B.pinterest(t+' video')]},
   reels:{label:'Reels / Verticals', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 8 16 12l-6 4z" fill="currentColor"/></svg>',
-    build:t=>[B.youtubeShort(t+' reel vertical 9:16'),B.pinterest(t+' reel vertical'),B.cosmos(t+' vertical')]},
+    build:t=>[B.pinterest(t+' reel vertical')]},
   color:{label:'Color', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.4" fill="currentColor"/><circle cx="14" cy="9" r="1.4" fill="currentColor"/><circle cx="16" cy="14" r="1.4" fill="currentColor"/></svg>',
-    build:t=>[B.adobecolor(t),B.coolors(t),B.moviesincolor(t),B.pinterest(t+' color palette')]},
+    build:t=>[B.pinterest(t+' color palette')]},
   lighting:{label:'Lighting', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 3a6 6 0 0 1 4 10.7c-.7.7-1 1.7-1 2.7v1H9v-1c0-1-.3-2-1-2.7A6 6 0 0 1 12 3z"/></svg>',
-    build:t=>[B.eyecannndy(t),B.youtube(t+' lighting setup cinematography'),B.pinterest(t+' lighting setup')]},
+    build:t=>[B.pinterest(t+' lighting')]},
   architecture:{label:'Architecture', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6M3 21h18"/></svg>',
-    build:t=>[B.dezeen(t),B.archdaily(t),B.archdigest(t),B.arena(t+' interior')]},
+    build:t=>[B.pinterest(t+' interior architecture')]},
   graphics:{label:'Graphics', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>',
-    build:t=>[B.pinterest(t+' graphic design poster artwork'),B.arenaGraphics(t),B.designspir(t),B.fontsinuse(t),B.cosmosPoster(t)]},
+    build:t=>[B.pinterest(t+' graphic design poster')]},
   films:{label:'Films & Shots', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 8h18M3 16h18M7 4v16M17 4v16"/></svg>',
-    build:t=>[B.shotcafe(t),B.filmgrab(t),B.moviecaps(t),B.frameset(t)]},
+    build:t=>[B.pinterest(t+' film still cinematography')]},
   curated:{label:'Curated', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>',
-    build:t=>[B.cosmos(t),B.arena(t),B.pinterest(t)]}
+    build:t=>[B.pinterest(t)]}
 };
 const MEDIA_ORDER=['stills','loops','videos','reels','color','lighting','architecture','graphics','films','curated'];
 
@@ -12470,7 +12470,7 @@ function tunedQuery(cardName){
 }
 function openMany(urls,label){
   if(!urls.length) return;
-  if(urls.length>1 && !confirm('Open '+urls.length+' '+(label||'tabs')+'?')) return;
+  // All chips now open Pinterest only — single tab, no confirm needed
   urls.forEach((u,i)=>setTimeout(()=>window.open(u,'_blank','noopener'),i*80));
 }
 
