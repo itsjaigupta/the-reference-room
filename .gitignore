@@ -8,3 +8,7 @@ Thumbs.db
 # Anything secret-shaped
 *.env
 .env*
+
+# Wrangler local state (Workers Static Assets watcher writes here at repo root
+# because worker/wrangler.toml uses `[assets] directory = "../"`)
+.wrangler/

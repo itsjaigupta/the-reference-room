@@ -10,7 +10,12 @@
 <!-- Optional: point at your deployed Cloudflare Worker (see worker/README.md).
      Leave empty to run fully client-side: Are.na embeds + URL-encoded shared sets
      still work; Unsplash/Pexels/OG/server-stored sets activate once this is set. -->
-<script>window.REFROOM_WORKER_BASE = "";</script>
+<script>
+  window.REFROOM_WORKER_BASE =
+    (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? "http://localhost:8787"
+      : "https://reference-room.itsjaigupta.workers.dev";
+</script>
 <!-- Set theme before first paint (dark is the default) to avoid a flash. -->
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('refhub_theme')||'dark';}catch(e){document.documentElement.dataset.theme='dark';}</script>
 <style>
