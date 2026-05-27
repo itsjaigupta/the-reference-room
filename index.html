@@ -41,17 +41,17 @@
   --text-3:    #756c5b;
   --text-4:    #9e9684;
 
-  --accent:        #C8841C;      /* amber — tungsten low */
-  --accent-2:      #E5A042;
-  --accent-press:  #a96d12;
-  --accent-tint:   rgba(200,132,28,0.12);
-  --accent-tint-2: rgba(200,132,28,0.20);
+  --accent:        #D03B72;      /* pink — brand primary */
+  --accent-2:      #E5407E;
+  --accent-press:  #A8295A;
+  --accent-tint:   rgba(208,59,114,0.12);
+  --accent-tint-2: rgba(208,59,114,0.20);
 
-  --hot:       #c14438;          /* pin red */
+  --hot:       #D03B72;          /* pin pink */
   --purple:    #7a4ed4;
 
   /* link-dot indicators */
-  --pin:#c14438; --film:#7a4ed4; --shot:#c87034;
+  --pin:#D03B72; --film:#7a4ed4; --shot:#c87034;
   --behance:#3a6bb0; --color:#5a8c5e; --adobe:#c43a32;
   --dezeen:#7a756e; --arch:#a07a3c;
 
@@ -77,7 +77,7 @@
 }
 
 html[data-theme="dark"] {
-  /* DARK (default) — neutral near-black, white ink, single amber accent */
+  /* DARK (default) — neutral near-black, white ink, single pink accent */
   --bg:        #0E0E0F;
   --bg-2:      #141416;
   --panel:     #161618;
@@ -93,11 +93,11 @@ html[data-theme="dark"] {
   --text-3:    rgba(255,255,255,0.46);
   --text-4:    rgba(255,255,255,0.32);
 
-  --accent:        #E5A042;
-  --accent-2:      #C8841C;
-  --accent-press:  #b4781a;
-  --accent-tint:   rgba(229,160,66,0.14);
-  --accent-tint-2: rgba(229,160,66,0.24);
+  --accent:        #E5407E;
+  --accent-2:      #F06292;
+  --accent-press:  #C02B68;
+  --accent-tint:   rgba(229,64,126,0.14);
+  --accent-tint-2: rgba(229,64,126,0.24);
 
   --glass:     rgba(14,14,15,0.80);
   --glass-2:   rgba(20,20,22,0.82);
@@ -204,7 +204,7 @@ html[data-theme="dark"] .role-chip:hover { background: rgba(255,245,220,0.10); }
   width: 22px; height: 22px;
   border-radius: 6px;
   background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  color: #fff8e8;
+  color: #fff;
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
@@ -516,7 +516,7 @@ html[data-theme="dark"] .filter-btn { background: rgba(255,245,220,0.05); box-sh
 .filter-btn.has-value .filter-count {
   font-size: 11px;
   background: var(--accent);
-  color: #fff8e8;
+  color: #fff;
   padding: 1px 6px;
   border-radius: 999px;
   font-weight: 600;
@@ -538,7 +538,7 @@ html[data-theme="dark"] .filter-btn { background: rgba(255,245,220,0.05); box-sh
   display: none;
 }
 .filter-clear.show { display: inline-flex; align-items: center; gap: 4px; }
-.filter-clear:hover { color: var(--hot); background: rgba(193,68,56,0.08); }
+.filter-clear:hover { color: var(--hot); background: rgba(208,59,114,0.08); }
 
 /* filter popover */
 .filter-pop {
@@ -588,7 +588,7 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
 .filter-pop-chip:active { transform: scale(0.96); }
 .filter-pop-chip.active {
   background: var(--accent);
-  color: #fff8e8;
+  color: #fff;
 }
 
 .filter-pop-foot {
@@ -646,21 +646,21 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
 /* ---- card grid ---------------------------------------------- */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 .card {
   position: relative;
   background: var(--panel);
   border: 0;
-  border-radius: var(--r-card);
+  border-radius: 16px;
   padding: 0;
   text-align: left;
   color: var(--text);
   cursor: pointer;
   font: inherit;
   display: flex; flex-direction: column;
-  min-height: 142px;
+  min-height: 230px;
   box-shadow: var(--sh-card);
   overflow: hidden;
   transition:
@@ -669,17 +669,25 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
   will-change: transform;
 }
 .card:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: var(--sh-card-hover);
+  transform: translateY(-3px) scale(1.012);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 0 0 1.5px var(--accent);
 }
 .card:active { transform: scale(0.99); transition-duration: 0.1s; }
 
-/* swatch stripe at top — group-tinted */
+/* board cover — Pinterest-board style, taller, gradient-filled */
 .card::before {
   content: "";
-  height: 6px;
-  background: linear-gradient(90deg, var(--sw1, #d4a854) 0%, var(--sw2, #b07a26) 50%, var(--sw3, #5a8c5e) 100%);
+  height: 140px;
+  background:
+    linear-gradient(160deg,
+      rgba(255,255,255,0.07) 0%,
+      rgba(0,0,0,0.18) 100%),
+    linear-gradient(130deg, var(--sw1, #d4a854) 0%, var(--sw2, #b07a26) 55%, var(--sw3, #5a8c5e) 100%);
   display: block;
+  flex-shrink: 0;
+}
+html[data-theme="dark"] .card::before {
+  filter: brightness(0.78) saturate(1.15);
 }
 
 .card-body {
@@ -715,11 +723,11 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
   overflow: hidden;
 }
 .card.compact { min-height: auto; }
-.card.compact .card-body { padding: 12px 14px; gap: 3px; }
+.card.compact::before { height: 60px; }
+.card.compact .card-body { padding: 10px 14px; gap: 3px; }
 .card.compact .card-blurb { display: none; }
 .card.compact .card-icon { display: none; }
-.card.compact .card-name { font-size: 14px; }
-.card.compact::before { height: 3px; }
+.card.compact .card-name { font-size: 13.5px; }
 
 .card.filtered-out { display: none; }
 
@@ -898,7 +906,7 @@ html[data-theme="dark"] .detail-actions a:hover { background: rgba(255,245,220,0
 .detail-actions button:active, .detail-actions a:active { transform: scale(0.97); opacity: 0.75; }
 .detail-actions .primary {
   background: var(--accent);
-  color: #fff8e8;
+  color: #fff;
   font-weight: 600;
 }
 .detail-actions .primary:hover { background: var(--accent-press); }
@@ -1273,7 +1281,7 @@ html[data-theme="dark"] .role-opt:hover { background: rgba(255,245,220,0.10); }
 .role-opt .role-glyph {
   width: 30px; height: 30px; border-radius: 8px;
   background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  color: #fff8e8;
+  color: #fff;
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
@@ -1302,7 +1310,7 @@ html[data-theme="dark"] .modal-foot button { background: rgba(255,245,220,0.10);
 .modal-foot button:hover { background: rgba(40,30,15,0.08); }
 html[data-theme="dark"] .modal-foot button:hover { background: rgba(255,245,220,0.14); }
 .modal-foot button:active { transform: scale(0.97); opacity: 0.75; }
-.modal-foot button.primary { background: var(--accent); color: #fff8e8; }
+.modal-foot button.primary { background: var(--accent); color: #fff; }
 .modal-foot button.primary:hover { background: var(--accent-press); }
 
 /* ---- hint chip ---------------------------------------------- */
@@ -1813,9 +1821,9 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
   .topbar .meta { display: none; }
 }
 
-/* ---- card top-strip: dial down from 6px → 3px to stay on minimal-hairline brand ---- */
-.card::before { height: 3px; opacity: 0.85; transition: height 0.18s var(--ease), opacity 0.18s var(--ease); }
-.card:hover::before { height: 5px; opacity: 1; }
+/* ---- card board cover: Pinterest-style hover depth ---- */
+.card::before { transition: filter 0.22s var(--ease); }
+.card:hover::before { filter: brightness(1.06) saturate(1.08); }
 
 /* ---- keyboard focus ring on cards (was missing) ---- */
 .card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--accent-tint); }
@@ -1824,32 +1832,139 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
 /* ====================== Pinterest section (primary) ====================== */
 .pins-sec {
   margin: 0 0 18px;
-  padding: 14px 14px 12px;
-  border-radius: 12px;
-  background: rgba(255,245,220,0.025);
+  padding: 16px 16px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.025);
   box-shadow: 0 0 0 0.5px var(--line-2);
 }
-.pins-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 10px; }
-.pins-head h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-2); }
+html[data-theme="light"] .pins-sec { background: rgba(0,0,0,0.02); }
+.pins-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+.pins-head h3 {
+  margin: 0;
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
 .pins-head .pins-count { font-size: 11.5px; color: var(--text-4); }
-.pins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.pins-cell { display: block; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; background: var(--bg-2); position: relative; box-shadow: 0 0 0 0.5px var(--line-2); }
-.pins-cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s var(--ease); }
-.pins-cell:hover img { transform: scale(1.04); }
-.pins-cell.skel { background: linear-gradient(90deg, var(--bg-2) 0%, var(--bg-3) 50%, var(--bg-2) 100%); background-size: 200% 100%; animation: pinShim 1.2s linear infinite; }
-.pins-cell.user-pin::after { content: "+"; position: absolute; top: 4px; right: 5px; font-size: 11px; color: var(--accent); background: rgba(0,0,0,0.55); width: 14px; height: 14px; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
-@keyframes pinShim { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-.pins-empty { padding: 22px 8px; text-align: center; color: var(--text-3); font-size: 12.5px; }
-.pins-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 0; }
-.pins-actions .pin-btn { flex: 1 1 auto; min-width: 140px; padding: 9px 12px; border-radius: 9px; border: 0; background: rgba(255,245,220,0.06); box-shadow: 0 0 0 0.5px var(--line-2); color: var(--text); font: inherit; font-size: 12.5px; cursor: pointer; transition: background 0.15s var(--ease), color 0.15s var(--ease); }
-.pins-actions .pin-btn:hover { background: var(--accent-tint); color: var(--accent); box-shadow: 0 0 0 0.5px var(--accent); }
-.pins-actions .pin-btn.primary { background: var(--accent); color: var(--bg); box-shadow: none; }
-.pins-actions .pin-btn.primary:hover { filter: brightness(1.08); }
+
+/* Masonry columns — Pinterest's defining layout */
+.pins-grid {
+  columns: 2;
+  column-gap: 8px;
+}
+.pins-cell {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-2);
+  position: relative;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+.pins-cell:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.28), 0 0 0 0.5px var(--line-3);
+}
+.pins-cell img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  transition: filter 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+/* Dark hover overlay */
+.pins-cell::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55) 100%);
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 12px;
+}
+.pins-cell:hover::before { opacity: 1; }
+/* Pink "Open" button on hover */
+.pins-cell::after {
+  content: "Open ↗";
+  position: absolute;
+  bottom: 10px; right: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+  padding: 5px 10px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  z-index: 2;
+  font-family: 'DM Mono', monospace;
+  white-space: nowrap;
+}
+.pins-cell:hover::after { opacity: 1; }
+
+/* Skeleton shimmer — portrait placeholder while loading */
+.pins-cell.skel {
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(90deg, var(--bg-2) 0%, var(--panel-3) 50%, var(--bg-2) 100%);
+  background-size: 200% 100%;
+  animation: pinShim 1.4s ease-in-out infinite;
+}
+.pins-cell.skel::before, .pins-cell.skel::after { display: none; }
+/* User-added pin: subtle pink left border */
+.pins-cell.user-pin { box-shadow: 0 0 0 0.5px var(--line-2), -2px 0 0 var(--accent); }
+
+@keyframes pinShim {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.pins-empty {
+  padding: 28px 12px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.pins-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; }
+.pins-actions .pin-btn {
+  flex: 1 1 auto;
+  min-width: 130px;
+  padding: 9px 14px;
+  border-radius: 22px;
+  border: 0;
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  color: var(--text);
+  font: inherit; font-size: 12.5px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+html[data-theme="light"] .pins-actions .pin-btn { background: var(--panel-3); }
+.pins-actions .pin-btn:hover { background: var(--accent-tint); color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.pins-actions .pin-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.35);
+}
+.pins-actions .pin-btn.primary:hover { filter: brightness(1.1); box-shadow: 0 4px 18px rgba(229,64,126,0.45); }
 .pins-addrow { display: none; gap: 8px; margin: 10px 0 0; }
 .pins-addrow.open { display: flex; }
-.pins-addrow input { flex: 1; padding: 9px 11px; border-radius: 9px; background: var(--bg-2); border: 0; box-shadow: 0 0 0 0.5px var(--line-2); color: var(--text); font: inherit; font-size: 12.5px; }
-.pins-addrow input:focus { outline: none; box-shadow: 0 0 0 0.5px var(--accent); }
-.pins-addrow button { padding: 9px 14px; border-radius: 9px; background: var(--accent); color: var(--bg); border: 0; font: inherit; font-size: 12.5px; cursor: pointer; }
+.pins-addrow input {
+  flex: 1; padding: 9px 12px; border-radius: 22px;
+  background: var(--bg-2); border: 0;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  color: var(--text); font: inherit; font-size: 12.5px;
+}
+.pins-addrow input:focus { outline: none; box-shadow: 0 0 0 1.5px var(--accent); }
+.pins-addrow button {
+  padding: 9px 16px; border-radius: 22px;
+  background: var(--accent); color: #fff;
+  border: 0; font: inherit; font-size: 12.5px; cursor: pointer;
+}
 
 /* ====================== Tools disclosure (collapsed by default) ====================== */
 .tools-disc {
@@ -1868,7 +1983,7 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
   transition: background 0.15s var(--ease);
 }
 .tools-disc > summary::-webkit-details-marker { display: none; }
-.tools-disc > summary:hover { background: rgba(255,245,220,0.04); }
+.tools-disc > summary:hover { background: rgba(229,64,126,0.04); }
 .tools-disc > summary .tools-label { display: flex; align-items: center; gap: 8px; }
 .tools-disc > summary .tools-chev { transition: transform 0.2s var(--ease); display: inline-block; }
 .tools-disc[open] > summary .tools-chev { transform: rotate(90deg); }
@@ -12760,7 +12875,7 @@ if(mobSearchInput){
     const shown=pins.slice(0,9);
     const searchUrl='https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q);
     sec.innerHTML =
-      '<div class="pins-head"><h3>Pinterest references</h3><span class="pins-count">'+
+      '<div class="pins-head"><h3>References</h3><span class="pins-count">'+
         (pins.length?(pins.length+' pin'+(pins.length>1?'s':'')+' curated'):'no pins yet')+
       '</span></div>'+
       (shown.length
@@ -12768,7 +12883,7 @@ if(mobSearchInput){
         : '<div class="pins-empty">No pins yet for this scene. Open Pinterest search below, or paste a pin URL to start a curated set.</div>'
       )+
       '<div class="pins-actions">'+
-        '<a class="pin-btn primary" href="'+esc(searchUrl)+'" target="_blank" rel="noopener">Open on Pinterest ↗</a>'+
+        '<a class="pin-btn primary" href="'+esc(searchUrl)+'" target="_blank" rel="noopener">Search Pinterest ↗</a>'+
         '<button class="pin-btn" type="button" data-pins-add>+ Add pin URL</button>'+
       '</div>'+
       '<form class="pins-addrow" data-pins-form>'+
