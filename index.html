@@ -12683,8 +12683,8 @@ function renderMediaRow(detail, card){
   const name=card.querySelector('.card-name').textContent.trim();
   const q=tunedQuery(name);
   const chips=MEDIA_ORDER.map(k=>{
-    const m=MEDIA[k]; const n=m.build(q).length;
-    return '<button class="media-chip" onclick="onMediaChip(\''+k+'\',\''+name.replace(/'/g,"\\'")+'\')">'+m.glyph+m.label+'<span class="count">'+n+'</span></button>';
+    const m=MEDIA[k];
+    return '<button class="media-chip" onclick="onMediaChip(\''+k+'\',\''+name.replace(/'/g,"\\'")+'\')">'+m.glyph+m.label+'</button>';
   }).join('');
   row.innerHTML='<div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div><div class="media-chips">'+chips+'</div>';
 }
