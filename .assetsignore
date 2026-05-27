@@ -5,6 +5,8 @@ worker/
 .claude/
 .git/
 .gitignore
+.assetsignore
+.wrangler/
 chats/
 project/
 *.md
