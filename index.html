@@ -2220,174 +2220,263 @@ html[data-theme="light"] .sf-group-head:hover { background: rgba(0,0,0,0.03); }
 
 /* ====================== Home (search-first) view ====================== */
 body.home-mode .app { display: none !important; }
+body.home-mode .hint { display: none !important; }
 
+/* ============================================================
+   HOME — editorial search-first canvas
+   Mumbai twilight image, dimmed; thin typography, no neon.
+   ============================================================ */
 .home-hero {
   display: none;
   position: fixed; inset: 0;
-  background-color: var(--bg);
+  background-color: #0a0a0b;
   background-image:
-    linear-gradient(180deg, rgba(14,14,15,0.78) 0%, rgba(14,14,15,0.86) 40%, rgba(14,14,15,0.94) 100%),
+    linear-gradient(180deg, rgba(10,10,11,0.86) 0%, rgba(10,10,11,0.92) 50%, rgba(10,10,11,0.97) 100%),
     url('/assets/home-hero.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 50;
-  flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 24px;
-  overflow-y: auto;
+  overflow: hidden;
+  color: rgba(255,255,255,0.92);
 }
-body.home-mode .home-hero { display: flex; }
+body.home-mode .home-hero { display: block; }
 
-/* Pink glow + film grain overlay */
+/* Film grain texture (SVG noise as data URI) */
 .home-hero::before {
   content: "";
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 700px 460px at 50% 38%, rgba(229,64,126,0.16), transparent 70%),
-    radial-gradient(ellipse 900px 560px at 50% 100%, rgba(229,64,126,0.07), transparent 70%);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.08 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: overlay;
   pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: screen;
+  z-index: 1;
 }
 
-.home-inner {
-  position: relative; z-index: 1;
-  width: 100%; max-width: 720px;
-  display: flex; flex-direction: column;
-  align-items: center;
-  gap: 32px;
+/* Single subtle pink wash near the search row */
+.home-hero::after {
+  content: "";
+  position: absolute; left: 50%; top: 56%;
+  width: 1100px; height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(229,64,126,0.10) 0%, transparent 65%);
+  pointer-events: none; z-index: 1;
 }
+
+/* === editorial chrome — corners === */
+.home-corner {
+  position: absolute;
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.42);
+  z-index: 3;
+}
+.home-corner-tl { top: 28px; left: 32px; }
+.home-corner-tr { top: 28px; right: 32px; text-align: right; }
+.home-corner-bl { bottom: 28px; left: 32px; }
+.home-corner-br { bottom: 28px; right: 32px; text-align: right; }
+.home-corner .dim { color: rgba(255,255,255,0.28); }
+.home-corner .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 7px; vertical-align: 1px; box-shadow: 0 0 12px rgba(229,64,126,0.6); }
+.home-corner a, .home-corner button {
+  background: transparent; border: 0;
+  color: inherit; font: inherit;
+  cursor: pointer; padding: 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.home-corner a:hover, .home-corner button:hover { color: rgba(255,255,255,0.92); }
+
+/* === centred stage === */
+.home-inner {
+  position: relative; z-index: 2;
+  height: 100%; width: 100%;
+  max-width: 880px; margin: 0 auto;
+  padding: 80px 32px;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: stretch;
+  gap: 0;
+}
+
+.home-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.40);
+  margin-bottom: 18px;
+}
+.home-eyebrow .sep { color: rgba(255,255,255,0.20); padding: 0 8px; }
 
 .home-brand {
   font-family: 'DM Serif Display', serif;
-  font-size: 42px; font-weight: 400;
-  letter-spacing: -0.025em;
-  color: var(--text);
-  line-height: 1;
-  display: flex; align-items: baseline; gap: 10px;
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 400; line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: rgba(255,255,255,0.96);
+  margin-bottom: 6px;
 }
-.home-brand::before {
-  content: "";
-  width: 14px; height: 14px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: inline-block;
-  align-self: center;
-  box-shadow: 0 0 0 5px var(--accent-tint), 0 0 32px var(--accent-tint-2);
+.home-brand .italic {
+  font-style: italic;
+  color: rgba(255,255,255,0.62);
 }
 .home-tagline {
-  font-family: 'DM Mono', monospace;
-  font-size: 12.5px; color: var(--text-3);
-  letter-spacing: 0.02em; margin-top: -16px;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: clamp(15px, 1.6vw, 19px);
+  color: rgba(255,255,255,0.50);
+  letter-spacing: 0;
+  max-width: 580px; line-height: 1.5;
+  margin-top: 4px;
 }
 
+/* === search === */
 .home-search-wrap {
-  width: 100%; position: relative;
+  position: relative;
+  margin: 56px 0 22px;
   display: flex; align-items: center;
 }
 .home-search-icon {
-  position: absolute; left: 22px; top: 50%;
+  position: absolute; left: 0; top: 50%;
   transform: translateY(-50%);
-  width: 20px; height: 20px;
-  color: var(--text-3);
+  width: 18px; height: 18px;
+  color: rgba(255,255,255,0.35);
   pointer-events: none;
 }
 .home-search {
-  width: 100%; padding: 22px 80px 22px 56px;
-  background: var(--panel);
-  border: 0; outline: none;
-  border-radius: 999px;
-  box-shadow: 0 0 0 0.5px var(--line-2), 0 12px 40px rgba(0,0,0,0.4);
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 16px; letter-spacing: -0.005em;
-  transition: box-shadow 0.2s;
+  width: 100%;
+  background: transparent;
+  border: 0; border-bottom: 1px solid rgba(255,255,255,0.20);
+  outline: none;
+  padding: 18px 100px 18px 30px;
+  color: rgba(255,255,255,0.96);
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  caret-color: var(--accent);
+  transition: border-color 0.3s ease;
 }
-.home-search:focus {
-  box-shadow: 0 0 0 1.5px var(--accent), 0 12px 50px rgba(229,64,126,0.25);
+.home-search::placeholder {
+  color: rgba(255,255,255,0.28);
+  font-style: italic;
 }
-.home-search::placeholder { color: var(--text-3); }
+.home-search:focus { border-bottom-color: rgba(229,64,126,0.7); }
 .home-search-go {
-  position: absolute; right: 10px; top: 50%;
+  position: absolute; right: 0; top: 50%;
   transform: translateY(-50%);
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border: 0; border-radius: 999px;
-  padding: 11px 22px;
-  color: #fff; font: inherit;
+  background: transparent;
+  border: 0; padding: 8px 4px;
+  color: rgba(255,255,255,0.50);
   font-family: 'DM Mono', monospace;
-  font-size: 12.5px; font-weight: 600;
-  cursor: pointer; letter-spacing: -0.003em;
-  box-shadow: 0 2px 12px rgba(229,64,126,0.3);
-  transition: filter 0.15s, transform 0.1s;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: color 0.18s, gap 0.2s;
 }
-.home-search-go:hover { filter: brightness(1.1); }
-.home-search-go:active { transform: translateY(-50%) scale(0.97); }
-.home-search-go:disabled { opacity: 0.55; pointer-events: none; }
+.home-search-go::after {
+  content: "→";
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  color: var(--accent);
+  transition: transform 0.2s ease;
+}
+.home-search-go:hover { color: rgba(255,255,255,0.96); gap: 12px; }
+.home-search-go:hover::after { transform: translateX(4px); }
+.home-search-go:disabled { opacity: 0.4; pointer-events: none; }
 
+/* === suggest chips === */
 .home-suggest {
   display: flex; flex-wrap: wrap;
-  gap: 7px; justify-content: center;
-  max-width: 600px;
+  gap: 14px 22px;
+  margin-top: 8px;
+}
+.home-suggest-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.32);
+  width: 100%; margin-bottom: -4px;
 }
 .home-suggest-chip {
-  background: transparent;
-  border: 0;
-  box-shadow: 0 0 0 0.5px var(--line-2);
-  color: var(--text-2);
-  font: inherit; font-size: 12px;
-  padding: 6px 13px; border-radius: 999px;
+  background: transparent; border: 0;
+  color: rgba(255,255,255,0.58);
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 15px;
   cursor: pointer;
-  letter-spacing: -0.003em;
-  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  padding: 2px 0 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  letter-spacing: -0.005em;
+  transition: color 0.18s, border-bottom-color 0.18s;
 }
-.home-suggest-chip:hover { background: var(--accent-tint); color: var(--accent); box-shadow: 0 0 0 0.5px var(--accent); }
+.home-suggest-chip:hover {
+  color: rgba(255,255,255,0.96);
+  border-bottom-color: var(--accent);
+}
 
+/* === results (after submit) === */
 .home-results {
-  width: 100%; min-height: 80px;
+  margin-top: 36px;
   display: none;
-  flex-direction: column; gap: 8px;
+  flex-direction: column; gap: 0;
 }
 .home-results.show { display: flex; }
 .home-results-label {
-  font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--text-3);
-  margin-bottom: 4px; text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,0.40);
+  margin-bottom: 16px;
 }
 .home-result-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px;
-  background: var(--panel);
-  border-radius: 12px;
-  box-shadow: 0 0 0 0.5px var(--line-2);
-  text-decoration: none; color: var(--text);
-  font-size: 14px; letter-spacing: -0.003em;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  display: flex; align-items: baseline; gap: 18px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.10);
+  text-decoration: none;
+  color: rgba(255,255,255,0.78);
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px; line-height: 1.3;
+  letter-spacing: -0.008em;
+  transition: color 0.18s, padding-left 0.22s ease;
 }
 .home-result-item:hover {
-  background: var(--accent-tint); box-shadow: 0 0 0 1px var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
+  color: rgba(255,255,255,0.98);
+  padding-left: 10px;
 }
-.home-result-item .hr-arrow { color: var(--accent); flex-shrink: 0; font-size: 16px; }
+.home-result-item .hr-arrow {
+  color: var(--accent); font-family: 'DM Mono', monospace;
+  font-size: 12px; flex-shrink: 0; min-width: 24px;
+  font-style: normal;
+}
+.home-result-item .hr-num {
+  font-family: 'DM Mono', monospace; font-size: 10.5px;
+  color: rgba(255,255,255,0.30); letter-spacing: 0.1em;
+  min-width: 26px; flex-shrink: 0;
+  font-style: normal;
+}
 
-.home-foot {
-  position: absolute; bottom: 24px; left: 0; right: 0;
-  display: flex; justify-content: center; align-items: center; gap: 24px;
-  z-index: 2;
-}
-.home-foot-link {
-  background: transparent; border: 0;
-  color: var(--text-3); font: inherit; font-size: 12.5px;
-  cursor: pointer; padding: 6px 10px;
+.home-status {
+  color: rgba(255,255,255,0.40);
   font-family: 'DM Mono', monospace;
-  letter-spacing: -0.003em;
-  transition: color 0.15s;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 10px 0;
 }
-.home-foot-link:hover { color: var(--accent); }
+.home-status.error { color: var(--accent); }
+.home-status .blink::after {
+  content: "_";
+  animation: hcaret 1s steps(1) infinite;
+  color: var(--accent);
+}
+@keyframes hcaret { 50% { opacity: 0; } }
 
-.home-status { color: var(--text-3); font-size: 13px; padding: 12px 0; text-align: center; }
-.home-status.error { color: var(--hot); }
+@media (max-width: 640px) {
+  .home-inner { padding: 60px 22px; }
+  .home-search-wrap { margin-top: 36px; }
+  .home-corner-tr, .home-corner-bl { display: none; }
+  .home-suggest { gap: 10px 16px; }
+}
 
 @media (max-width: 600px) {
   .home-brand { font-size: 32px; }
@@ -2410,31 +2499,36 @@ body.home-mode .home-hero { display: flex; }
 
 <!-- ============= SEARCH-FIRST HOME VIEW ============= -->
 <section class="home-hero" id="home-hero">
+
+  <div class="home-corner home-corner-tl"><span class="dot"></span>The Reference Room</div>
+  <div class="home-corner home-corner-tr">Mumbai <span class="dim">·</span> Vol. 01 <span class="dim">·</span> MMXXVI</div>
+  <div class="home-corner home-corner-bl">currentmethod.in</div>
+  <div class="home-corner home-corner-br">
+    <button onclick="exitHome()">Browse the index →</button>
+  </div>
+
   <div class="home-inner">
-    <div class="home-brand">The Reference Room</div>
-    <div class="home-tagline">currentmethod.in · visual references for film & ads</div>
+    <div class="home-eyebrow">A reference room <span class="sep">/</span> for picture-makers <span class="sep">/</span> est. 2026</div>
+    <h1 class="home-brand">Find any <span class="italic">visual</span><br>reference. Fast.</h1>
+    <p class="home-tagline">An AI-curated index of locations, moods, eras and setups for Indian film, advertising and editorial. Describe what you're after — in your own words.</p>
 
     <div class="home-search-wrap">
-      <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input class="home-search" id="home-search-input" type="text" autocomplete="off" placeholder="Describe what you're looking for — scene, mood, era, anything…" autofocus>
-      <button class="home-search-go" id="home-search-go" onclick="homeSearch()">Search ✦</button>
+      <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input class="home-search" id="home-search-input" type="text" autocomplete="off" placeholder="a moody Mumbai bedroom at night, warm tungsten…" autofocus>
+      <button class="home-search-go" id="home-search-go" onclick="homeSearch()">Search</button>
     </div>
 
     <div class="home-suggest" id="home-suggest">
-      <button class="home-suggest-chip" onclick="homePrefill('moody Mumbai bedroom at night warm tungsten')">moody Mumbai bedroom</button>
-      <button class="home-suggest-chip" onclick="homePrefill('Diwali decor warm lights joint family home')">Diwali joint family</button>
-      <button class="home-suggest-chip" onclick="homePrefill('70s Indian living room joint family golden afternoon')">70s living room</button>
-      <button class="home-suggest-chip" onclick="homePrefill('cyclorama studio white background heist thieves')">cyc heist scene</button>
+      <span class="home-suggest-label">Try</span>
+      <button class="home-suggest-chip" onclick="homePrefill('moody Mumbai bedroom at night warm tungsten')">a moody Mumbai bedroom</button>
+      <button class="home-suggest-chip" onclick="homePrefill('Diwali decor warm lights joint family home')">a Diwali joint family scene</button>
+      <button class="home-suggest-chip" onclick="homePrefill('70s Indian living room joint family golden afternoon')">a 70s living room</button>
+      <button class="home-suggest-chip" onclick="homePrefill('cyclorama studio white background heist thieves')">a cyc heist scene</button>
       <button class="home-suggest-chip" onclick="homePrefill('monsoon street Mumbai night neon')">monsoon Mumbai night</button>
-      <button class="home-suggest-chip" onclick="homePrefill('intimate couple argument cramped flat')">couple argument flat</button>
+      <button class="home-suggest-chip" onclick="homePrefill('intimate couple argument cramped flat')">a couple's argument</button>
     </div>
 
     <div class="home-results" id="home-results"></div>
-  </div>
-
-  <div class="home-foot">
-    <button class="home-foot-link" onclick="exitHome()">Browse all scenes →</button>
-    <button class="home-foot-link" onclick="document.getElementById('theme-btn').click()">Appearance</button>
   </div>
 </section>
 
@@ -13897,7 +13991,7 @@ if(mobSearchInput){
     }
     btn.disabled=true;
     res.classList.add('show');
-    res.innerHTML='<div class="home-status">Composing queries with AI…</div>';
+    res.innerHTML='<div class="home-status"><span class="blink">Composing</span></div>';
     try{
       const r=await fetch(WORKER+'/ai/query',{
         method:'POST',
@@ -13917,10 +14011,10 @@ if(mobSearchInput){
         return;
       }
       res.innerHTML=
-        '<div class="home-results-label">AI-composed Pinterest searches — pick one</div>'+
-        queries.map(qq=>
+        '<div class="home-results-label">— AI-composed searches</div>'+
+        queries.map((qq,i)=>
           '<a class="home-result-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(qq)+'" target="_blank" rel="noopener">'+
-            '<span class="hr-arrow">↗</span>'+homeEsc(qq)+
+            '<span class="hr-num">'+(String(i+1).padStart(2,'0'))+'</span>'+homeEsc(qq)+'<span class="hr-arrow" style="margin-left:auto">↗</span>'+
           '</a>'
         ).join('');
     }catch(e){
