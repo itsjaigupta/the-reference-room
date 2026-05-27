@@ -2224,7 +2224,13 @@ body.home-mode .app { display: none !important; }
 .home-hero {
   display: none;
   position: fixed; inset: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(180deg, rgba(14,14,15,0.78) 0%, rgba(14,14,15,0.86) 40%, rgba(14,14,15,0.94) 100%),
+    url('/assets/home-hero.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: 50;
   flex-direction: column;
   align-items: center; justify-content: center;
@@ -2233,15 +2239,16 @@ body.home-mode .app { display: none !important; }
 }
 body.home-mode .home-hero { display: flex; }
 
-/* Subtle pink glow background */
+/* Pink glow + film grain overlay */
 .home-hero::before {
   content: "";
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 600px 400px at 50% 35%, rgba(229,64,126,0.10), transparent 70%),
-    radial-gradient(ellipse 800px 500px at 50% 100%, rgba(229,64,126,0.05), transparent 70%);
+    radial-gradient(ellipse 700px 460px at 50% 38%, rgba(229,64,126,0.16), transparent 70%),
+    radial-gradient(ellipse 900px 560px at 50% 100%, rgba(229,64,126,0.07), transparent 70%);
   pointer-events: none;
   z-index: 0;
+  mix-blend-mode: screen;
 }
 
 .home-inner {
