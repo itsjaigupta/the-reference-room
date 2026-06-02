@@ -15,8 +15,12 @@ humans).
 
 ## Hard rules (do not violate)
 
-1. **No AI / LLM / semantic-search features anywhere.** Owner has explicitly
-   opted out. Palette is deterministic fuzzy matching only.
+1. **Keep search deterministic.** The Cmd-K palette and image-grid embeds
+   (Are.na/Unsplash/Pexels) must never use AI/LLM/semantic search. Palette
+   is plain fuzzy + rule-based keyword→filter mapping. The owner opted out
+   of AI search specifically.
+   - The opt-in "AI Reference Brain" button (scene/script analysis) is the
+     owner's call. Don't expand AI into other features without approval.
 2. **Single HTML file, vanilla JS.** No build, no React/Vue/Svelte.
 3. **Preserve all localStorage** (see `docs/ARCHITECTURE.md` for the schema).
 4. **API keys never in client HTML** — Worker secrets only.

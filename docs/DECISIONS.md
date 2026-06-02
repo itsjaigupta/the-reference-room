@@ -5,19 +5,28 @@ read the rationale first and bring receipts.
 
 ---
 
-## D-001 · No AI / LLM / semantic search anywhere
+## D-001 · Keep search deterministic — no AI in palette or image grids
 
-**Decision**: The command palette is plain fuzzy text matching plus a
-rule-based keyword → filter / role map. The image embeds are keyword image
-search via Are.na / Unsplash / Pexels. There are **no** embeddings, no model
-calls, no semantic search, no LLM-powered "smart suggestions".
+**Decision**: The Cmd-K command palette is plain fuzzy text matching plus a
+rule-based keyword → filter / role map. The inline image grids (Are.na /
+Unsplash / Pexels) are keyword API search. There are **no** embeddings, no
+model calls, no semantic search, no LLM-powered "smart suggestions" in
+either of those surfaces.
 
-**Why**: The owner explicitly opted out. The user-facing concern is that AI
-search features are unpredictable, slow, and add cost; a deterministic
-palette is faster and never embarrasses the user.
+**Why**: The owner explicitly opted out of *AI search features*. A
+deterministic palette is faster, predictable, and never embarrasses the
+user on stage. Keyword image search has decades of attribution and
+licensing precedent; semantic substitution opens both rabbit holes.
 
-**If you're tempted**: Don't. If you genuinely think a non-deterministic
-feature is necessary, file an issue first — do not ship it.
+**What's NOT this rule**: The owner later shipped a separate, opt-in
+**AI Reference Brain** button on `main` for scene-query / script-analysis
+use. That's a deliberate, owner-installed feature distinct from search.
+It does not change the rule above — the **palette and image grids
+remain deterministic**.
+
+**If you're tempted to expand AI elsewhere**: Don't extend AI into
+filters, auto-tagging, recommendations, or any search-shaped feature
+without **explicit owner approval**. File an issue or ask first.
 
 ---
 

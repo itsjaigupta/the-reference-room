@@ -84,8 +84,11 @@ See [`tests/README.md`](./tests/README.md) for more.
 
 Lifted from `AGENTS.md` because they're easy to miss:
 
-1. **No AI / LLM / semantic-search features.** The owner has explicitly
-   opted out. The palette is deterministic; keyword image search only.
+1. **Keep search deterministic.** The Cmd-K palette and image-grid embeds
+   (Are.na/Unsplash/Pexels) must never use AI/LLM/semantic search. The
+   palette is fuzzy + rule-based keyword→filter mapping. (There's an
+   opt-in "AI Reference Brain" button on `main` for scene/script
+   analysis — that's separate from search. See `docs/DECISIONS.md` D-001.)
 2. **Single HTML file, vanilla JS.** No build pipeline. Alpine.js or htmx
    only if reactivity genuinely needed. **No React/Vue/Svelte.**
 3. **Preserve all localStorage** on every change. Schema is in

@@ -48,6 +48,20 @@
 - `docs/` (this folder).
 - `tests/` (smoke + logic tests, runnable with plain Node).
 
+### Post-context-layer additions on `main`
+A separate work stream landed these in parallel (owner-initiated):
+- **Search-first home mode** — centered query bar, app behind it; `home-mode`
+  set inline on `<body>` to prevent app-shell flash. Editorial chrome:
+  corner labels, italic serif headline, hairline search underline, numbered
+  result list. `.hint` kbd strip hidden in home-mode.
+- **Higgsfield-generated hero background** (`assets/home-hero.png`) with
+  dimmed overlay + SVG-noise grain.
+- **Sidebar nav tree replaced with a filter panel.**
+- **AI Reference Brain button** (`.ai-btn` → `openAI()`) — opt-in scene-
+  query / script-analysis modal backed by deepseek-v4-pro via the Worker.
+  Distinct from the deterministic Cmd-K palette (see `DECISIONS.md` D-001).
+- Media-chip count badges removed (they were misleading).
+
 ---
 
 ## Pending (user action)

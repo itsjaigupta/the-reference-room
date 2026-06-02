@@ -8,7 +8,9 @@ re-reading the whole `index.html`.
 ## File map
 
 ```
-index.html              — the entire app, ~12,000 lines
+index.html              — the entire app, ~13,000+ lines
+assets/home-hero.png    — search-first home background (Higgsfield-generated)
+.assetsignore           — assets that should not ship to clients
 worker/index.js         — Cloudflare Worker, ES module
 worker/wrangler.toml    — Worker config: KV binding, vars, secrets (not in file)
 tests/smoke.js          — runs the full script in a stubbed DOM
@@ -17,6 +19,14 @@ docs/                   — this folder
 chats/chat1.md          — historical design transcript
 project/                — historical design prototypes + research PDFs
 ```
+
+### Two modes
+The app has two visual modes toggled by `body.home-mode`:
+- **Home mode**: search-first landing — centered query bar over the
+  hero image, editorial corner labels, hidden sidebar/topbar/.hint.
+  Set inline on `<body>` to avoid app-shell flash on load.
+- **App mode**: the full launcher (topbar + filter panel + card grid +
+  panel). Removing `home-mode` from `<body>` reveals the app shell.
 
 ---
 
@@ -135,11 +145,20 @@ Hash-based (works on any static host with no rewrites). Schema:
 | `GET /unsplash?q=` | Unsplash search → `{results:[…]}` | Worker secret |
 | `GET /unsplash/track?loc=` | Pings `download_location` (Unsplash guideline) | Worker secret |
 | `GET /pexels?q=` | Pexels search → `{results:[…]}` | Worker secret |
+| `GET /arena?q=` | Are.na search proxy (bot-block bypass) | none |
+| `GET /pinterest/oembed?url=` | Pinterest oEmbed proxy | none |
 | `GET /og?url=` | OpenGraph scrape, edge-cached 24h | none |
+| `POST /ai/query` | AI Reference Brain — scene query (opt-in feature) | Worker secret |
+| `POST /ai/script` | AI Reference Brain — script analysis (opt-in feature) | Worker secret |
 | `POST /set` | Create shared set, returns `{id, editToken}` | none |
 | `GET /set/:id` | Read shared set (editToken stripped) | none |
 | `PUT /set/:id` | Edit shared set | `X-Edit-Token` header |
 | `GET /health` | Health check | none |
+
+> `/ai/query` and `/ai/script` power the opt-in **AI Reference Brain** button
+> (`.ai-btn` → `openAI()` in `index.html`). They are **not** wired into the
+> Cmd-K palette or image grids, which remain deterministic. See
+> `docs/DECISIONS.md` D-001.
 
 CORS is wide open (`ALLOW_ORIGIN: "*"`) for development — lock it to the
 real origin before going live.

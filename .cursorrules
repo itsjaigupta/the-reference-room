@@ -11,11 +11,13 @@ always in the system prompt.
 
 ## Hard rules — never violate
 
-1. **No AI / LLM / semantic-search features.** The owner has explicitly opted
-   out. The command palette is deterministic fuzzy matching plus rule-based
-   keyword → filter mapping. Do not introduce model calls, embeddings,
-   "smart suggestions" backed by an LLM, or anything that talks to an AI
-   service from the client.
+1. **Keep search deterministic — palette + image grids only.** The Cmd-K
+   command palette and image-grid embeds (Are.na/Unsplash/Pexels) must
+   never use AI/LLM/semantic search. Palette = fuzzy match + rule-based
+   keyword→filter map. The owner has explicitly opted out of AI search
+   features. There **is** an opt-in "AI Reference Brain" button (scene/
+   script analysis) — that's separate; don't extend AI into search,
+   filters, auto-tagging, or recommendations without owner approval.
 2. **Single HTML file, vanilla JS.** No build pipeline. Alpine.js or htmx are
    OK only if reactivity becomes painful. **No React / Vue / Svelte.**
 3. **Preserve all localStorage keys** on every change. Schema lives in
