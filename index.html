@@ -10,7 +10,12 @@
 <!-- Optional: point at your deployed Cloudflare Worker (see worker/README.md).
      Leave empty to run fully client-side: Are.na embeds + URL-encoded shared sets
      still work; Unsplash/Pexels/OG/server-stored sets activate once this is set. -->
-<script>window.REFROOM_WORKER_BASE = "";</script>
+<script>
+  window.REFROOM_WORKER_BASE =
+    (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? "http://localhost:8787"
+      : "https://reference-room.itsjaigupta.workers.dev";
+</script>
 <!-- Set theme before first paint (dark is the default) to avoid a flash. -->
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('refhub_theme')||'dark';}catch(e){document.documentElement.dataset.theme='dark';}</script>
 <style>
@@ -36,17 +41,17 @@
   --text-3:    #756c5b;
   --text-4:    #9e9684;
 
-  --accent:        #C8841C;      /* amber — tungsten low */
-  --accent-2:      #E5A042;
-  --accent-press:  #a96d12;
-  --accent-tint:   rgba(200,132,28,0.12);
-  --accent-tint-2: rgba(200,132,28,0.20);
+  --accent:        #D03B72;      /* pink — brand primary */
+  --accent-2:      #E5407E;
+  --accent-press:  #A8295A;
+  --accent-tint:   rgba(208,59,114,0.12);
+  --accent-tint-2: rgba(208,59,114,0.20);
 
-  --hot:       #c14438;          /* pin red */
+  --hot:       #D03B72;          /* pin pink */
   --purple:    #7a4ed4;
 
   /* link-dot indicators */
-  --pin:#c14438; --film:#7a4ed4; --shot:#c87034;
+  --pin:#D03B72; --film:#7a4ed4; --shot:#c87034;
   --behance:#3a6bb0; --color:#5a8c5e; --adobe:#c43a32;
   --dezeen:#7a756e; --arch:#a07a3c;
 
@@ -72,7 +77,7 @@
 }
 
 html[data-theme="dark"] {
-  /* DARK (default) — neutral near-black, white ink, single amber accent */
+  /* DARK (default) — neutral near-black, white ink, single pink accent */
   --bg:        #0E0E0F;
   --bg-2:      #141416;
   --panel:     #161618;
@@ -88,11 +93,11 @@ html[data-theme="dark"] {
   --text-3:    rgba(255,255,255,0.46);
   --text-4:    rgba(255,255,255,0.32);
 
-  --accent:        #E5A042;
-  --accent-2:      #C8841C;
-  --accent-press:  #b4781a;
-  --accent-tint:   rgba(229,160,66,0.14);
-  --accent-tint-2: rgba(229,160,66,0.24);
+  --accent:        #E5407E;
+  --accent-2:      #F06292;
+  --accent-press:  #C02B68;
+  --accent-tint:   rgba(229,64,126,0.14);
+  --accent-tint-2: rgba(229,64,126,0.24);
 
   --glass:     rgba(14,14,15,0.80);
   --glass-2:   rgba(20,20,22,0.82);
@@ -199,7 +204,7 @@ html[data-theme="dark"] .role-chip:hover { background: rgba(255,245,220,0.10); }
   width: 22px; height: 22px;
   border-radius: 6px;
   background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  color: #fff8e8;
+  color: #fff;
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
@@ -449,6 +454,7 @@ html[data-theme="dark"] .sb-foot button { background: rgba(255,245,220,0.07); }
 
 /* ---- filter bar (sticky beneath topbar) --------------------- */
 .filterbar {
+  display: none !important;
   position: sticky; top: 58px; z-index: 25;
   background: var(--glass-2);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
@@ -511,7 +517,7 @@ html[data-theme="dark"] .filter-btn { background: rgba(255,245,220,0.05); box-sh
 .filter-btn.has-value .filter-count {
   font-size: 11px;
   background: var(--accent);
-  color: #fff8e8;
+  color: #fff;
   padding: 1px 6px;
   border-radius: 999px;
   font-weight: 600;
@@ -533,7 +539,7 @@ html[data-theme="dark"] .filter-btn { background: rgba(255,245,220,0.05); box-sh
   display: none;
 }
 .filter-clear.show { display: inline-flex; align-items: center; gap: 4px; }
-.filter-clear:hover { color: var(--hot); background: rgba(193,68,56,0.08); }
+.filter-clear:hover { color: var(--hot); background: rgba(208,59,114,0.08); }
 
 /* filter popover */
 .filter-pop {
@@ -583,7 +589,7 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
 .filter-pop-chip:active { transform: scale(0.96); }
 .filter-pop-chip.active {
   background: var(--accent);
-  color: #fff8e8;
+  color: #fff;
 }
 
 .filter-pop-foot {
@@ -641,21 +647,21 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
 /* ---- card grid ---------------------------------------------- */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 .card {
   position: relative;
   background: var(--panel);
   border: 0;
-  border-radius: var(--r-card);
+  border-radius: 16px;
   padding: 0;
   text-align: left;
   color: var(--text);
   cursor: pointer;
   font: inherit;
   display: flex; flex-direction: column;
-  min-height: 142px;
+  min-height: 230px;
   box-shadow: var(--sh-card);
   overflow: hidden;
   transition:
@@ -664,17 +670,25 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
   will-change: transform;
 }
 .card:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: var(--sh-card-hover);
+  transform: translateY(-3px) scale(1.012);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22), 0 0 0 1.5px var(--accent);
 }
 .card:active { transform: scale(0.99); transition-duration: 0.1s; }
 
-/* swatch stripe at top — group-tinted */
+/* board cover — Pinterest-board style, taller, gradient-filled */
 .card::before {
   content: "";
-  height: 6px;
-  background: linear-gradient(90deg, var(--sw1, #d4a854) 0%, var(--sw2, #b07a26) 50%, var(--sw3, #5a8c5e) 100%);
+  height: 140px;
+  background:
+    linear-gradient(160deg,
+      rgba(255,255,255,0.07) 0%,
+      rgba(0,0,0,0.18) 100%),
+    linear-gradient(130deg, var(--sw1, #d4a854) 0%, var(--sw2, #b07a26) 55%, var(--sw3, #5a8c5e) 100%);
   display: block;
+  flex-shrink: 0;
+}
+html[data-theme="dark"] .card::before {
+  filter: brightness(0.78) saturate(1.15);
 }
 
 .card-body {
@@ -710,11 +724,11 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
   overflow: hidden;
 }
 .card.compact { min-height: auto; }
-.card.compact .card-body { padding: 12px 14px; gap: 3px; }
+.card.compact::before { height: 60px; }
+.card.compact .card-body { padding: 10px 14px; gap: 3px; }
 .card.compact .card-blurb { display: none; }
 .card.compact .card-icon { display: none; }
-.card.compact .card-name { font-size: 14px; }
-.card.compact::before { height: 3px; }
+.card.compact .card-name { font-size: 13.5px; }
 
 .card.filtered-out { display: none; }
 
@@ -752,6 +766,7 @@ html[data-theme="dark"] .filter-pop-chip:hover { background: rgba(255,245,220,0.
 [data-group="travel-trips"]   .card { --sw1:#6ea5c8; --sw2:#8ab389; --sw3:#d6a85e; }
 [data-group="work-school-life"]   .card { --sw1:#8b8a96; --sw2:#b89856; --sw3:#6a7e96; }
 [data-group="creator-content"]    .card { --sw1:#c4407a; --sw2:#d99a3e; --sw3:#6ea5c8; }
+[data-group="cyclorama"]          .card { --sw1:#e8e6dc; --sw2:#aaa599; --sw3:#d4a854; }
 
 /* ============================================================
    DETAIL — slide-over WITHOUT dim (grid stays alive)
@@ -892,7 +907,7 @@ html[data-theme="dark"] .detail-actions a:hover { background: rgba(255,245,220,0
 .detail-actions button:active, .detail-actions a:active { transform: scale(0.97); opacity: 0.75; }
 .detail-actions .primary {
   background: var(--accent);
-  color: #fff8e8;
+  color: #fff;
   font-weight: 600;
 }
 .detail-actions .primary:hover { background: var(--accent-press); }
@@ -1267,7 +1282,7 @@ html[data-theme="dark"] .role-opt:hover { background: rgba(255,245,220,0.10); }
 .role-opt .role-glyph {
   width: 30px; height: 30px; border-radius: 8px;
   background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  color: #fff8e8;
+  color: #fff;
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
@@ -1296,7 +1311,7 @@ html[data-theme="dark"] .modal-foot button { background: rgba(255,245,220,0.10);
 .modal-foot button:hover { background: rgba(40,30,15,0.08); }
 html[data-theme="dark"] .modal-foot button:hover { background: rgba(255,245,220,0.14); }
 .modal-foot button:active { transform: scale(0.97); opacity: 0.75; }
-.modal-foot button.primary { background: var(--accent); color: #fff8e8; }
+.modal-foot button.primary { background: var(--accent); color: #fff; }
 .modal-foot button.primary:hover { background: var(--accent-press); }
 
 /* ---- hint chip ---------------------------------------------- */
@@ -1803,9 +1818,719 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
   .tb-cmdk span, .tb-cmdk kbd { display: none; }
   .tb-cmdk { padding: 8px; border-radius: 10px; }
 }
+@media (max-width: 419px) {
+  .topbar .meta { display: none; }
+}
+
+/* ---- card board cover: Pinterest-style hover depth ---- */
+.card::before { transition: filter 0.22s var(--ease); }
+.card:hover::before { filter: brightness(1.06) saturate(1.08); }
+
+/* ---- keyboard focus ring on cards (was missing) ---- */
+.card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--accent-tint); }
+.card-pin:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+
+/* ====================== Pinterest section (primary) ====================== */
+.pins-sec {
+  margin: 0 0 18px;
+  padding: 16px 16px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.025);
+  box-shadow: 0 0 0 0.5px var(--line-2);
+}
+html[data-theme="light"] .pins-sec { background: rgba(0,0,0,0.02); }
+.pins-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+.pins-head h3 {
+  margin: 0;
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.pins-head .pins-count { font-size: 11.5px; color: var(--text-4); }
+
+/* Masonry columns — Pinterest's defining layout */
+.pins-grid {
+  columns: 2;
+  column-gap: 8px;
+}
+.pins-cell {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-2);
+  position: relative;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+.pins-cell:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.28), 0 0 0 0.5px var(--line-3);
+}
+.pins-cell img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  transition: filter 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+/* Dark hover overlay */
+.pins-cell::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55) 100%);
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 12px;
+}
+.pins-cell:hover::before { opacity: 1; }
+/* Pink "Open" button on hover */
+.pins-cell::after {
+  content: "Open ↗";
+  position: absolute;
+  bottom: 10px; right: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+  padding: 5px 10px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  z-index: 2;
+  font-family: 'DM Mono', monospace;
+  white-space: nowrap;
+}
+.pins-cell:hover::after { opacity: 1; }
+
+/* Skeleton shimmer — portrait placeholder while loading */
+.pins-cell.skel {
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(90deg, var(--bg-2) 0%, var(--panel-3) 50%, var(--bg-2) 100%);
+  background-size: 200% 100%;
+  animation: pinShim 1.4s ease-in-out infinite;
+}
+.pins-cell.skel::before, .pins-cell.skel::after { display: none; }
+/* User-added pin: subtle pink left border */
+.pins-cell.user-pin { box-shadow: 0 0 0 0.5px var(--line-2), -2px 0 0 var(--accent); }
+
+@keyframes pinShim {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.pins-empty {
+  padding: 28px 12px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.pins-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; }
+.pins-actions .pin-btn {
+  flex: 1 1 auto;
+  min-width: 130px;
+  padding: 9px 14px;
+  border-radius: 22px;
+  border: 0;
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  color: var(--text);
+  font: inherit; font-size: 12.5px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+html[data-theme="light"] .pins-actions .pin-btn { background: var(--panel-3); }
+.pins-actions .pin-btn:hover { background: var(--accent-tint); color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.pins-actions .pin-btn.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.35);
+}
+.pins-actions .pin-btn.primary:hover { filter: brightness(1.1); box-shadow: 0 4px 18px rgba(229,64,126,0.45); }
+.pins-addrow { display: none; gap: 8px; margin: 10px 0 0; }
+.pins-addrow.open { display: flex; }
+.pins-addrow input {
+  flex: 1; padding: 9px 12px; border-radius: 22px;
+  background: var(--bg-2); border: 0;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  color: var(--text); font: inherit; font-size: 12.5px;
+}
+.pins-addrow input:focus { outline: none; box-shadow: 0 0 0 1.5px var(--accent); }
+.pins-addrow button {
+  padding: 9px 16px; border-radius: 22px;
+  background: var(--accent); color: #fff;
+  border: 0; font: inherit; font-size: 12.5px; cursor: pointer;
+}
+
+/* ====================== Tools disclosure (collapsed by default) ====================== */
+.tools-disc {
+  margin: 6px 0 18px;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  overflow: hidden;
+}
+.tools-disc > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 11px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 12.5px; color: var(--text-2);
+  transition: background 0.15s var(--ease);
+}
+.tools-disc > summary::-webkit-details-marker { display: none; }
+.tools-disc > summary:hover { background: rgba(229,64,126,0.04); }
+.tools-disc > summary .tools-label { display: flex; align-items: center; gap: 8px; }
+.tools-disc > summary .tools-chev { transition: transform 0.2s var(--ease); display: inline-block; }
+.tools-disc[open] > summary .tools-chev { transform: rotate(90deg); }
+.tools-disc > summary .tools-meta { color: var(--text-4); font-size: 11.5px; }
+.tools-body { padding: 8px 14px 16px; border-top: 0.5px solid var(--line-2); }
+.tools-body .embed-sec:first-child { margin-top: 8px; }
+.tools-body .media-row { margin-top: 6px; }
+
+/* ---- empty pinned section: hide instead of show placeholder ---- */
+#sb-pinned[data-empty="1"] { display: none; }
+
+/* ---- Pinterest-only main panel ----
+   Hide all legacy multi-platform link blocks and "Open Top 5" action button.
+   Only the Notes textarea block remains in the main detail panel.          */
+.detail-block:has(.detail-links) { display: none; }
+.detail-actions { display: none; }
+
+/* ====================== AI Reference Brain panel ====================== */
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px 7px 11px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  border: 0; border-radius: 22px;
+  color: #fff; font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.30);
+  transition: filter 0.15s, transform 0.1s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+.ai-btn:hover { filter: brightness(1.1); box-shadow: 0 4px 18px rgba(229,64,126,0.45); }
+.ai-btn:active { transform: scale(0.97); }
+.ai-btn svg { width: 15px; height: 15px; stroke-width: 1.8; }
+
+.ai-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.ai-overlay.open { opacity: 1; pointer-events: auto; }
+
+.ai-modal {
+  background: var(--panel);
+  border-radius: 22px;
+  box-shadow: 0 32px 100px rgba(0,0,0,0.55), 0 0 0 0.5px var(--line-2);
+  width: min(640px, 100%);
+  max-height: min(84vh, 680px);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transform: translateY(16px) scale(0.96);
+  transition: transform 0.22s cubic-bezier(0.34,1.36,0.5,1);
+}
+.ai-overlay.open .ai-modal { transform: translateY(0) scale(1); }
+
+.ai-modal-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 20px 16px;
+  border-bottom: 0.5px solid var(--line);
+  flex-shrink: 0;
+}
+.ai-modal-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.ai-modal-icon svg { width: 18px; height: 18px; stroke-width: 1.7; }
+.ai-modal-title { flex: 1; font-family: 'DM Serif Display', serif; font-size: 19px; font-weight: 400; letter-spacing: -0.01em; }
+.ai-modal-close {
+  background: transparent; border: 0; color: var(--text-3);
+  cursor: pointer; padding: 6px; border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+.ai-modal-close:hover { color: var(--text); background: var(--bg-2); }
+
+.ai-tabs { display: flex; gap: 4px; padding: 12px 20px 0; flex-shrink: 0; }
+.ai-tab {
+  background: transparent; border: 0;
+  color: var(--text-3); font: inherit; font-size: 13px; font-weight: 500;
+  padding: 7px 14px; border-radius: 9px; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: -0.003em;
+}
+.ai-tab:hover { background: var(--bg-2); color: var(--text); }
+.ai-tab.active { background: var(--accent-tint); color: var(--accent); font-weight: 600; }
+
+.ai-body { flex: 1; overflow-y: auto; padding: 16px 20px 24px; }
+.ai-pane { display: none; }
+.ai-pane.active { display: block; }
+
+.ai-field-label {
+  font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 8px;
+}
+.ai-textarea {
+  width: 100%; min-height: 110px; resize: vertical;
+  background: var(--bg-2); border: 0;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  border-radius: 12px; padding: 12px 14px;
+  color: var(--text); font: inherit; font-size: 13.5px; line-height: 1.55;
+  outline: none;
+  transition: box-shadow 0.15s;
+}
+.ai-textarea:focus { box-shadow: 0 0 0 1.5px var(--accent); }
+.ai-textarea::placeholder { color: var(--text-4); font-size: 13px; }
+.ai-run {
+  margin-top: 12px; width: 100%; padding: 11px 16px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: 0; border-radius: 12px;
+  color: #fff; font: inherit; font-size: 13.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  box-shadow: 0 2px 12px rgba(229,64,126,0.25);
+  transition: filter 0.15s, transform 0.1s;
+}
+.ai-run:hover { filter: brightness(1.08); }
+.ai-run:active { transform: scale(0.995); }
+.ai-run:disabled { opacity: 0.5; pointer-events: none; }
+
+.ai-results { margin-top: 18px; }
+.ai-section-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 9px;
+}
+.ai-query-list { display: flex; flex-direction: column; gap: 6px; }
+.ai-query-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 10px;
+  background: var(--bg-2);
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  text-decoration: none; color: var(--text); font-size: 13px;
+  letter-spacing: -0.003em;
+  transition: background 0.15s, box-shadow 0.15s, color 0.15s;
+}
+.ai-query-item:hover { background: var(--accent-tint); box-shadow: 0 0 0 1px var(--accent); color: var(--accent); }
+.ai-query-item .qi-arrow { color: var(--accent); font-size: 14px; flex-shrink: 0; }
+.ai-query-item .qi-label { font-size: 10.5px; color: var(--text-4); margin-right: 4px; flex-shrink: 0; }
+
+.ai-cards-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+.ai-card-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: 999px;
+  background: var(--accent-tint); color: var(--accent);
+  border: 0; font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; letter-spacing: -0.003em;
+  transition: background 0.15s;
+}
+.ai-card-chip:hover { background: var(--accent-tint-2); }
+.ai-card-chip .cc-star { font-size: 10px; opacity: 0.7; }
+.ai-card-chip .cc-reason { font-weight: 400; font-size: 11px; opacity: 0.7; margin-left: 4px; }
+
+.ai-status { padding: 12px 0; font-size: 13px; color: var(--text-3); }
+.ai-status.error { color: var(--hot); }
+
+/* ====================== Sidebar Filter Panel ====================== */
+.sf-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+}
+.sf-header-title {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-3);
+}
+.sf-clear {
+  background: transparent; border: 0;
+  color: var(--accent); font: inherit; font-size: 12px; font-weight: 600;
+  cursor: pointer; padding: 3px 8px; border-radius: 6px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s, background 0.15s;
+  letter-spacing: -0.003em;
+}
+.sf-clear.visible { opacity: 1; pointer-events: auto; }
+.sf-clear:hover { background: var(--accent-tint); }
+
+.sf-panel {
+  flex: 1; overflow-y: auto; padding: 0 0 100px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-3) transparent;
+}
+.sf-panel::-webkit-scrollbar { width: 4px; }
+.sf-panel::-webkit-scrollbar-thumb { background: var(--line-3); border-radius: 2px; }
+
+.sf-group { border-bottom: 0.5px solid var(--line); }
+.sf-group-head {
+  width: 100%; background: transparent; border: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  color: var(--text-2); font: inherit; font-size: 13px; font-weight: 500;
+  cursor: pointer; text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.sf-group-head:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+html[data-theme="light"] .sf-group-head:hover { background: rgba(0,0,0,0.03); }
+.sf-group-head-left { display: flex; align-items: center; gap: 8px; }
+.sf-group-chev {
+  font-size: 9px; color: var(--text-4);
+  transition: transform 0.18s;
+  display: inline-block;
+}
+.sf-group.open .sf-group-chev { transform: rotate(90deg); }
+.sf-group-name { font-size: 12.5px; }
+.sf-group-val {
+  font-size: 11px; color: var(--accent); font-weight: 600;
+  background: var(--accent-tint); padding: 2px 7px; border-radius: 999px;
+  max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sf-group-body {
+  display: none; padding: 4px 12px 12px;
+  flex-wrap: wrap; gap: 6px;
+}
+.sf-group.open .sf-group-body { display: flex; }
+.sf-opt {
+  background: var(--bg-2); border: 0;
+  color: var(--text-2); font: inherit; font-size: 12px; font-weight: 500;
+  padding: 5px 11px; border-radius: 999px;
+  cursor: pointer; letter-spacing: -0.003em;
+  box-shadow: 0 0 0 0.5px var(--line-2);
+  transition: background 0.13s, color 0.13s, box-shadow 0.13s, transform 0.1s;
+}
+.sf-opt:hover { color: var(--text); background: var(--panel-3); }
+.sf-opt:active { transform: scale(0.96); }
+.sf-opt.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(229,64,126,0.3);
+  font-weight: 600;
+}
+.sf-opt.active:hover { filter: brightness(1.08); }
+
+/* ====================== Home (search-first) view ====================== */
+body.home-mode .app { display: none !important; }
+body.home-mode .hint { display: none !important; }
+
+/* ============================================================
+   HOME — editorial search-first canvas
+   Mumbai twilight image, dimmed; thin typography, no neon.
+   ============================================================ */
+.home-hero {
+  display: none;
+  position: fixed; inset: 0;
+  background-color: #0a0a0b;
+  background-image:
+    linear-gradient(180deg, rgba(10,10,11,0.86) 0%, rgba(10,10,11,0.92) 50%, rgba(10,10,11,0.97) 100%),
+    url('/assets/home-hero.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 50;
+  overflow: hidden;
+  color: rgba(255,255,255,0.92);
+}
+body.home-mode .home-hero { display: block; }
+
+/* Film grain texture (SVG noise as data URI) */
+.home-hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.08 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Single subtle pink wash near the search row */
+.home-hero::after {
+  content: "";
+  position: absolute; left: 50%; top: 56%;
+  width: 1100px; height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(229,64,126,0.10) 0%, transparent 65%);
+  pointer-events: none; z-index: 1;
+}
+
+/* === editorial chrome — corners === */
+.home-corner {
+  position: absolute;
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.42);
+  z-index: 3;
+}
+.home-corner-tl { top: 28px; left: 32px; }
+.home-corner-tr { top: 28px; right: 32px; text-align: right; }
+.home-corner-bl { bottom: 28px; left: 32px; }
+.home-corner-br { bottom: 28px; right: 32px; text-align: right; }
+.home-corner .dim { color: rgba(255,255,255,0.28); }
+.home-corner .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 7px; vertical-align: 1px; box-shadow: 0 0 12px rgba(229,64,126,0.6); }
+.home-corner a, .home-corner button {
+  background: transparent; border: 0;
+  color: inherit; font: inherit;
+  cursor: pointer; padding: 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.home-corner a:hover, .home-corner button:hover { color: rgba(255,255,255,0.92); }
+
+/* === centred stage === */
+.home-inner {
+  position: relative; z-index: 2;
+  height: 100%; width: 100%;
+  max-width: 880px; margin: 0 auto;
+  padding: 80px 32px;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: stretch;
+  gap: 0;
+}
+
+.home-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.40);
+  margin-bottom: 18px;
+}
+.home-eyebrow .sep { color: rgba(255,255,255,0.20); padding: 0 8px; }
+
+.home-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 400; line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: rgba(255,255,255,0.96);
+  margin-bottom: 6px;
+}
+.home-brand .italic {
+  font-style: italic;
+  color: rgba(255,255,255,0.62);
+}
+.home-tagline {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: clamp(15px, 1.6vw, 19px);
+  color: rgba(255,255,255,0.50);
+  letter-spacing: 0;
+  max-width: 580px; line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* === search === */
+.home-search-wrap {
+  position: relative;
+  margin: 56px 0 22px;
+  display: flex; align-items: center;
+}
+.home-search-icon {
+  position: absolute; left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  color: rgba(255,255,255,0.35);
+  pointer-events: none;
+}
+.home-search {
+  width: 100%;
+  background: transparent;
+  border: 0; border-bottom: 1px solid rgba(255,255,255,0.20);
+  outline: none;
+  padding: 18px 100px 18px 30px;
+  color: rgba(255,255,255,0.96);
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  caret-color: var(--accent);
+  transition: border-color 0.3s ease;
+}
+.home-search::placeholder {
+  color: rgba(255,255,255,0.28);
+  font-style: italic;
+}
+.home-search:focus { border-bottom-color: rgba(229,64,126,0.7); }
+.home-search-go {
+  position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 0; padding: 8px 4px;
+  color: rgba(255,255,255,0.50);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: color 0.18s, gap 0.2s;
+}
+.home-search-go::after {
+  content: "→";
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  color: var(--accent);
+  transition: transform 0.2s ease;
+}
+.home-search-go:hover { color: rgba(255,255,255,0.96); gap: 12px; }
+.home-search-go:hover::after { transform: translateX(4px); }
+.home-search-go:disabled { opacity: 0.4; pointer-events: none; }
+
+/* === suggest chips === */
+.home-suggest {
+  display: flex; flex-wrap: wrap;
+  gap: 14px 22px;
+  margin-top: 8px;
+}
+.home-suggest-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.32);
+  width: 100%; margin-bottom: -4px;
+}
+.home-suggest-chip {
+  background: transparent; border: 0;
+  color: rgba(255,255,255,0.58);
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 2px 0 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  letter-spacing: -0.005em;
+  transition: color 0.18s, border-bottom-color 0.18s;
+}
+.home-suggest-chip:hover {
+  color: rgba(255,255,255,0.96);
+  border-bottom-color: var(--accent);
+}
+
+/* === results (after submit) === */
+.home-results {
+  margin-top: 36px;
+  display: none;
+  flex-direction: column; gap: 0;
+}
+.home-results.show { display: flex; }
+.home-results-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,0.40);
+  margin-bottom: 16px;
+}
+.home-result-item {
+  display: flex; align-items: baseline; gap: 18px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.10);
+  text-decoration: none;
+  color: rgba(255,255,255,0.78);
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px; line-height: 1.3;
+  letter-spacing: -0.008em;
+  transition: color 0.18s, padding-left 0.22s ease;
+}
+.home-result-item:hover {
+  color: rgba(255,255,255,0.98);
+  padding-left: 10px;
+}
+.home-result-item .hr-arrow {
+  color: var(--accent); font-family: 'DM Mono', monospace;
+  font-size: 12px; flex-shrink: 0; min-width: 24px;
+  font-style: normal;
+}
+.home-result-item .hr-num {
+  font-family: 'DM Mono', monospace; font-size: 10.5px;
+  color: rgba(255,255,255,0.30); letter-spacing: 0.1em;
+  min-width: 26px; flex-shrink: 0;
+  font-style: normal;
+}
+
+.home-status {
+  color: rgba(255,255,255,0.40);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 10px 0;
+}
+.home-status.error { color: var(--accent); }
+.home-status .blink::after {
+  content: "_";
+  animation: hcaret 1s steps(1) infinite;
+  color: var(--accent);
+}
+@keyframes hcaret { 50% { opacity: 0; } }
+
+@media (max-width: 640px) {
+  .home-inner { padding: 60px 22px; }
+  .home-search-wrap { margin-top: 36px; }
+  .home-corner-tr, .home-corner-bl { display: none; }
+  .home-suggest { gap: 10px 16px; }
+}
+
+@media (max-width: 600px) {
+  .home-brand { font-size: 32px; }
+  .home-search { padding: 16px 70px 16px 48px; font-size: 14px; }
+  .home-search-icon { left: 18px; width: 16px; height: 16px; }
+  .home-search-go { padding: 9px 16px; font-size: 11.5px; }
+}
 </style>
 </head>
-<body>
+<body class="home-mode">
+<script>
+  // Skip home-mode if user arrived via a deep link (card slug, set, share)
+  try {
+    var h = (location.hash || '');
+    if (h.startsWith('#/card/') || h.startsWith('#/set/') || h.startsWith('#s=') || /^#[a-z0-9_]+$/i.test(h)) {
+      document.body.classList.remove('home-mode');
+    }
+  } catch(e){}
+</script>
+
+<!-- ============= SEARCH-FIRST HOME VIEW ============= -->
+<section class="home-hero" id="home-hero">
+
+  <div class="home-corner home-corner-tl"><span class="dot"></span>The Reference Room</div>
+  <div class="home-corner home-corner-tr">Mumbai <span class="dim">·</span> Vol. 01 <span class="dim">·</span> MMXXVI</div>
+  <div class="home-corner home-corner-bl">currentmethod.in</div>
+  <div class="home-corner home-corner-br">
+    <button onclick="exitHome()">Browse the index →</button>
+  </div>
+
+  <div class="home-inner">
+    <div class="home-eyebrow">A reference room <span class="sep">/</span> for picture-makers <span class="sep">/</span> est. 2026</div>
+    <h1 class="home-brand">Find any <span class="italic">visual</span><br>reference. Fast.</h1>
+    <p class="home-tagline">An AI-curated index of locations, moods, eras and setups for Indian film, advertising and editorial. Describe what you're after — in your own words.</p>
+
+    <div class="home-search-wrap">
+      <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input class="home-search" id="home-search-input" type="text" autocomplete="off" placeholder="a moody Mumbai bedroom at night, warm tungsten…" autofocus>
+      <button class="home-search-go" id="home-search-go" onclick="homeSearch()">Search</button>
+    </div>
+
+    <div class="home-suggest" id="home-suggest">
+      <span class="home-suggest-label">Try</span>
+      <button class="home-suggest-chip" onclick="homePrefill('moody Mumbai bedroom at night warm tungsten')">a moody Mumbai bedroom</button>
+      <button class="home-suggest-chip" onclick="homePrefill('Diwali decor warm lights joint family home')">a Diwali joint family scene</button>
+      <button class="home-suggest-chip" onclick="homePrefill('70s Indian living room joint family golden afternoon')">a 70s living room</button>
+      <button class="home-suggest-chip" onclick="homePrefill('cyclorama studio white background heist thieves')">a cyc heist scene</button>
+      <button class="home-suggest-chip" onclick="homePrefill('monsoon street Mumbai night neon')">monsoon Mumbai night</button>
+      <button class="home-suggest-chip" onclick="homePrefill('intimate couple argument cramped flat')">a couple's argument</button>
+    </div>
+
+    <div class="home-results" id="home-results"></div>
+  </div>
+</section>
 
 <div class="app">
   <aside class="sidebar">
@@ -1836,7 +2561,15 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
       <button class="sb-tab" data-tab="checks">Checks</button>
     </div>
 
-    <div class="sb-scroll">
+    <div class="sf-header">
+      <span class="sf-header-title">Refine</span>
+      <button class="sf-clear" id="sf-clear-btn" onclick="clearFilters()">Clear all</button>
+    </div>
+    <div class="sf-panel" id="sf-panel">
+      <!-- filter groups rendered by renderSidebarFilters() -->
+    </div>
+
+    <div style="display:none">
       <div class="sb-section" id="sb-pinned">
         <div class="sb-section-title">Pinned</div>
         <div class="empty">Click ★ on any card</div>
@@ -1848,6 +2581,14 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
       <div class="sb-section sb-sets-nav">
         <div class="sb-section-title">Sets · By Group</div>
         
+        <div class="sb-group" data-group="cyclorama">
+          <button class="sb-grouphead" onclick="toggleGroup('cyclorama')">
+            <span class="sb-chev">▾</span>
+            <span class="sb-groupname">Cyclorama · Studio</span>
+            <span class="sb-count">8</span>
+          </button>
+          <div class="sb-groupbody"><a href="#cyc_white" class="sb-cat" data-anchor="cyc_white">Generic White</a><a href="#cyc_family_meeting" class="sb-cat" data-anchor="cyc_family_meeting">Family Meeting (Home)</a><a href="#cyc_lawyer" class="sb-cat" data-anchor="cyc_lawyer">Lawyer's Office</a><a href="#cyc_tattoo" class="sb-cat" data-anchor="cyc_tattoo">Tattoo Parlour</a><a href="#cyc_negotiation" class="sb-cat" data-anchor="cyc_negotiation">Negotiation / Hostage</a><a href="#cyc_heist" class="sb-cat" data-anchor="cyc_heist">Heist / Burglary</a><a href="#cyc_yoga" class="sb-cat" data-anchor="cyc_yoga">Yoga Couple</a><a href="#cyc_retail" class="sb-cat" data-anchor="cyc_retail">Mattress / Furniture Store</a></div>
+        </div>
         <div class="sb-group" data-group="home-interior">
           <button class="sb-grouphead" onclick="toggleGroup('home-interior')">
             <span class="sb-chev">▾</span>
@@ -1958,6 +2699,7 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
         </div>
       </div>
     </div>
+    </div>
 
     <div class="sb-foot">
       <button id="theme-btn" title="Toggle appearance">Appearance</button>
@@ -1970,6 +2712,10 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
       <h1 id="topbar-title">All Sets &amp; Locations</h1>
       <span class="meta" id="topbar-meta">84 categories</span>
       <div class="topbar-actions">
+        <button class="ai-btn" onclick="openAI()" title="AI Reference Brain (scene queries + script analysis)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.68 5.17L19 9l-5.32 1.83L12 16l-1.68-5.17L5 9l5.32-1.83z"/><path d="M19 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+          AI
+        </button>
         <button class="tb-cmdk" onclick="openCmdk()" title="Search everything (⌘K or /)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           <span>Search</span><kbd>⌘K</kbd>
@@ -2000,6 +2746,7 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
 
     <div class="filterbar" id="filterbar">
       <span class="filterbar-label">Refine</span>
+      <button class="filter-btn" data-dim="treatment" onclick="openFilterPop(event,'treatment')"><span class="filter-label">Treatment</span><span class="filter-chev"></span></button>
       <button class="filter-btn" data-dim="color"   onclick="openFilterPop(event,'color')"><span class="filter-label">Color</span><span class="filter-chev"></span></button>
       <button class="filter-btn" data-dim="time"    onclick="openFilterPop(event,'time')"><span class="filter-label">Time</span><span class="filter-chev"></span></button>
       <button class="filter-btn" data-dim="mood"    onclick="openFilterPop(event,'mood')"><span class="filter-label">Mood</span><span class="filter-chev"></span></button>
@@ -2020,6 +2767,11 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
 
       <div class="shelf active" data-shelf="sets">
         
+<section class="set-group" data-group="cyclorama">
+  <h2 class="set-grouptitle">Cyclorama · Studio Setups</h2>
+  <div class="card-grid"><button class="card" data-anchor="cyc_white" data-pinterest-q="white cyclorama infinity cove studio set design clean stage product hero" data-search="cyc white cyclorama infinity cove studio product hero clean stage brand film commercial"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 14c4 0 6-4 9-4s5 4 9 4"/></svg></div><div class="card-name">Cyc · Generic White</div><div class="card-blurb">Pure white cove · product hero, clean stage, brand films</div></div><button class="card-pin" data-anchor="cyc_white" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_white')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_family_meeting" data-pinterest-q="family dining table meeting set design white background studio film inheritance scene" data-search="cyc family meeting home dining table inheritance lawyer two couples wide table white background studio set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="3" rx="1"/><path d="M6 13v6M18 13v6"/><circle cx="8" cy="7" r="1.5"/><circle cx="12" cy="6.5" r="1.5"/><circle cx="16" cy="7" r="1.5"/></svg></div><div class="card-name">Cyc · Family Meeting (Home)</div><div class="card-blurb">Long table, two couples + lawyer in centre · home scene on white cyc</div></div><button class="card-pin" data-anchor="cyc_family_meeting" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_family_meeting')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_lawyer" data-pinterest-q="lawyer office set design wood desk leather chair will reading white background studio" data-search="cyc lawyer office will reading courtroom legal desk leather chair files white cyclorama institutional set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7l-3 6h6z"/><path d="M19 7l-3 6h6z"/><path d="M5 21h14"/></svg></div><div class="card-name">Cyc · Lawyer's Office</div><div class="card-blurb">Will reading, legal counsel · desk, leather chair, files on white cyc</div></div><button class="card-pin" data-anchor="cyc_lawyer" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_lawyer')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_tattoo" data-pinterest-q="tattoo parlour set design studio chair ink station film commercial white background" data-search="cyc tattoo parlour studio chair ink station neon white cyclorama institutional set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l3-3 9-9 3 3-9 9z"/><path d="M14 6l4 4"/><circle cx="19" cy="5" r="2"/></svg></div><div class="card-name">Cyc · Tattoo Parlour</div><div class="card-blurb">Tattoo chair, ink station, neon · on white cyclorama</div></div><button class="card-pin" data-anchor="cyc_tattoo" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_tattoo')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_negotiation" data-pinterest-q="hostage negotiation tactical set design briefcase film commercial white background studio" data-search="cyc negotiation hostage tactical standoff briefcase paperwork white cyclorama institutional set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></div><div class="card-name">Cyc · Negotiation / Hostage</div><div class="card-blurb">Tactical standoff, briefcase, papers · on white cyc</div></div><button class="card-pin" data-anchor="cyc_negotiation" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_negotiation')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_heist" data-pinterest-q="heist burglary thieves set design ski mask loot bag flashlight cat burglar film commercial white background studio" data-search="cyc heist burglary thieves stealing theft two robbers masks loot bag flashlight rope safe vault white cyclorama studio set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11c2-3 5-4 9-4s7 1 9 4"/><path d="M3 11v3a4 4 0 0 0 4 4h10a4 4 0 0 0 4-4v-3"/><circle cx="9" cy="14" r="1.5"/><circle cx="15" cy="14" r="1.5"/></svg></div><div class="card-name">Cyc · Heist / Burglary</div><div class="card-blurb">Two thieves, ski masks, loot bag · theft scene on white cyc</div></div><button class="card-pin" data-anchor="cyc_heist" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_heist')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_yoga" data-pinterest-q="yoga couple home set design mat asana film commercial white background studio" data-search="cyc yoga couple home stretching mat asana indian white cyclorama lifestyle set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v6"/><path d="M9 13l-3 7M15 13l3 7"/><path d="M8 9h8"/></svg></div><div class="card-name">Cyc · Yoga Couple</div><div class="card-blurb">Yoga mats, couple, asana flow · on white cyc</div></div><button class="card-pin" data-anchor="cyc_yoga" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_yoga')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button><button class="card" data-anchor="cyc_retail" data-pinterest-q="mattress furniture store showroom set design display white background studio commercial" data-search="cyc mattress furniture store retail showroom display salesfloor sleepwell white cyclorama set"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 14h6"/></svg></div><div class="card-name">Cyc · Mattress / Furniture Store</div><div class="card-blurb">Retail showroom, sales floor, display · on white cyc</div></div><button class="card-pin" data-anchor="cyc_retail" title="Pin" onclick="event.stopPropagation();togglePin(this,'cyc_retail')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></button></button></div>
+</section>
+
 <section class="set-group" data-group="home-interior">
   <h2 class="set-grouptitle">Home · Interior</h2>
   <div class="card-grid"><button class="card" data-anchor="bedroom" data-search="bedroom sleep spaces · sheets, lighting, bedside, headboards bedroom set design cinematography"><div class="card-body"><div class="card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"/><path d="M2 17h20"/><path d="M2 21h20"/><path d="M7 12V9h10v3"/></svg></div><div class="card-name">Bedroom</div><div class="card-blurb">Sleep spaces · sheets, lighting, bedside, headboards</div></div><button class="card-pin" data-anchor="bedroom" title="Pin" onclick="event.stopPropagation();togglePin(this,'bedroom')">
@@ -2675,6 +3427,39 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
 
     </div>
   </main>
+</div>
+
+<!-- ========================= AI Reference Brain ========================= -->
+<div class="ai-overlay" id="ai-overlay">
+  <div class="ai-modal" role="dialog" aria-modal="true" aria-label="AI Reference Brain">
+    <div class="ai-modal-head">
+      <div class="ai-modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.68 5.17L19 9l-5.32 1.83L12 16l-1.68-5.17L5 9l5.32-1.83z"/><path d="M19 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+      </div>
+      <div class="ai-modal-title">AI Reference Brain</div>
+      <button class="ai-modal-close" onclick="closeAI()" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="ai-tabs">
+      <button class="ai-tab active" data-ai-tab="query" onclick="switchAITab('query')">✦ Query Generator</button>
+      <button class="ai-tab" data-ai-tab="script" onclick="switchAITab('script')">📄 Script → Cards</button>
+    </div>
+    <div class="ai-body">
+      <div class="ai-pane active" id="ai-pane-query">
+        <div class="ai-field-label">Describe your scene or visual</div>
+        <textarea class="ai-textarea" id="ai-query-input" rows="5" placeholder="e.g. &quot;Moody night bedroom scene, couple in argument, warm tungsten practicals, cramped Mumbai middle-class flat&quot;&#10;&#10;e.g. &quot;70s Indian joint family living room, afternoon golden light, crowded with relatives&quot;"></textarea>
+        <button class="ai-run" id="ai-query-btn" onclick="runAIQuery()">Generate Pinterest queries ✦</button>
+        <div class="ai-results" id="ai-query-results"></div>
+      </div>
+      <div class="ai-pane" id="ai-pane-script">
+        <div class="ai-field-label">Paste a script scene or brief</div>
+        <textarea class="ai-textarea" id="ai-script-input" rows="8" placeholder="INT. KITCHEN - EARLY MORNING&#10;&#10;PRIYA (34) stands at the gas stove, stirring chai. The kitchen is small, tiled in 80s blue, a cooler humming in the corner. Her mother-in-law watches from the doorway..."></textarea>
+        <button class="ai-run" id="ai-script-btn" onclick="runAIScript()">Analyse scene ✦</button>
+        <div class="ai-results" id="ai-script-results"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="panel-bg" id="panel-bg" onclick="closePanel()"></div>
@@ -11455,6 +12240,150 @@ kbd.k { font-family: inherit; font-size: 10.5px; background: var(--panel-3); bor
     <textarea class="notes" data-key="notes_act_baraat" placeholder="Ideas, refs to remember, props, lens, palette decisions… (saved in your browser)"></textarea>
   </div>
 </div>
+
+<div class="detail" data-anchor="cyc_white">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 14c4 0 6-4 9-4s5 4 9 4"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Generic White Studio</div>
+      <div class="detail-blurb">Pure white cyclorama / infinity cove. Product hero shoots, brand films, clean stage for institutional setups. 13 reference pins curated.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','white cyclorama studio setup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('lighting','white cyclorama studio setup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18v3M8 21h8M12 3a6 6 0 0 0-4 10c1 1 2 2 2 3h4c0-1 1-2 2-3a6 6 0 0 0-4-10z"/></svg> Lighting</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_white" placeholder="Lighting setup, props inventory, wardrobe notes…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_family_meeting">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="3" rx="1"/><path d="M6 13v6M18 13v6"/><circle cx="8" cy="7" r="1.5"/><circle cx="12" cy="6.5" r="1.5"/><circle cx="16" cy="7" r="1.5"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Family Meeting (Home + Lawyer)</div>
+      <div class="detail-blurb">Long dining/conference table at home. Two couples facing each other, lawyer in the centre. Built on a white cyclorama. NUUK "Inheritance" revised setup.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','family dining table meeting set design white background studio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','long dining table chairs paperwork file folder envelope home dining room')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_family_meeting" placeholder="Table size, chair count, wardrobe per couple, lawyer wardrobe, props (will, envelope, dog leash)…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_lawyer">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7l-3 6h6z"/><path d="M19 7l-3 6h6z"/><path d="M5 21h14"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Lawyer's Office</div>
+      <div class="detail-blurb">Will reading, legal counsel, courtroom feel — built on white cyclorama. Desk, leather chair, files, brass scales.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','lawyer office set white cyclorama studio')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','lawyer office desk leather chair file folder gavel scales')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_lawyer" placeholder="Wardrobe (robes/suits), props (gavel, scales), wall treatment, file boxes…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_tattoo">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l3-3 9-9 3 3-9 9z"/><path d="M14 6l4 4"/><circle cx="19" cy="5" r="2"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Tattoo Parlour</div>
+      <div class="detail-blurb">Tattoo chair, ink station, neon signage — on white cyclorama. NUUK BFF "The Tattoo" type setup.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','tattoo parlour studio white cyclorama set design')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','tattoo machine ink station neon sign chair stencils flash sheets')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_tattoo" placeholder="Chair model, neon palette, flash-sheet styling…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_negotiation">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Negotiation / Hostage</div>
+      <div class="detail-blurb">Tactical standoff, briefcase, sliding paper — on white cyclorama. NUUK LĪT PRO "The Hostage" type setup.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','hostage negotiation tactical studio white cyclorama institutional set')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','tactical vest briefcase paper folder radio earpiece negotiation desk')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_negotiation" placeholder="Wardrobe palette (tactical vs civilian), prop list, blocking…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_heist">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11c2-3 5-4 9-4s7 1 9 4"/><path d="M3 11v3a4 4 0 0 0 4 4h10a4 4 0 0 0 4-4v-3"/><circle cx="9" cy="14" r="1.5"/><circle cx="15" cy="14" r="1.5"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Heist / Burglary</div>
+      <div class="detail-blurb">Two thieves mid-theft — ski masks, loot bag, flashlight, sneaking silhouettes — staged on a white cyclorama. Caper / comic-thriller territory.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','heist burglary thieves set design white background studio film commercial')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','ski mask balaclava loot bag flashlight crowbar lockpick rope safe vault gloves')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_heist" placeholder="Wardrobe (all-black vs colourful), mask style, props (bag/flashlight/rope), blocking, body language…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_yoga">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v6"/><path d="M9 13l-3 7M15 13l3 7"/><path d="M8 9h8"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Yoga Couple</div>
+      <div class="detail-blurb">Yoga mats, couple, asana flow — on white cyclorama. Sleepwell "Yoga Couple" type setup.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','yoga couple home studio white cyclorama lifestyle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','yoga mat block strap bolster meditation cushion plants')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_yoga" placeholder="Mat color, wardrobe, prop styling…"></textarea>
+  </div>
+</div>
+
+<div class="detail" data-anchor="cyc_retail">
+  <div class="detail-head">
+    <div class="detail-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 14h6"/></svg></div>
+    <div>
+      <div class="detail-title">Cyc · Mattress / Furniture Store</div>
+      <div class="detail-blurb">Retail showroom, sales floor, product display — on white cyclorama. Sleepwell-style store scene without full set build.</div>
+    </div>
+  </div>
+  <div class="media-row">
+    <div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div>
+    <div class="media-chips"><button class="media-chip" onclick="onMediaChip('stills','mattress furniture store retail showroom white cyclorama display set')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg> Stills</button><button class="media-chip" onclick="onMediaChip('props','mattress bed showroom display tag price banner pillow brand signage')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg> Props</button></div>
+  </div>
+  <div class="detail-block">
+    <h3>📝 My Notes</h3>
+    <textarea class="notes" data-key="notes_cyc_retail" placeholder="Brand signage, display props, pricing tags, sales-rep wardrobe…"></textarea>
+  </div>
+</div>
   </div>
 </aside>
 
@@ -11588,8 +12517,9 @@ function updatePinUI(){
   document.querySelectorAll('.card-pin').forEach(b=>b.classList.toggle('pinned',pinned.includes(b.dataset.anchor)));
   document.querySelectorAll('.sb-cat').forEach(c=>c.classList.toggle('pinned',pinned.includes(c.dataset.anchor)));
   const pb=document.getElementById('sb-pinned');
-  if(pinned.length===0){pb.innerHTML='<div class="sb-section-title">Pinned</div><div class="empty">Click ★ on any card</div>'}
+  if(pinned.length===0){pb.dataset.empty='1';pb.innerHTML='';}
   else{
+    pb.dataset.empty='0';
     let h='<div class="sb-section-title">Pinned ★</div>';
     pinned.forEach(a=>{const c=document.querySelector('.card[data-anchor="'+a+'"]');if(c){const n=c.querySelector('.card-name').textContent;h+='<a href="#'+a+'" class="sb-cat pinned" onclick="event.preventDefault();openCard(\''+a+'\')">★ '+n+'</a>'}});
     pb.innerHTML=h;
@@ -11674,71 +12604,131 @@ localStorage.setItem(ROLE_KEY,currentRole);
 // ---- FILTERS (10 dimensions, single-select each) -------------------
 const FILTER_KEY='refhub_filters_v3';
 const FILTER_DIMS={
-  color:{label:'Color', sub:'Tonal palette',
-    opts:[{v:'warm',l:'Warm',q:'warm tones golden'},{v:'cool',l:'Cool',q:'cool tones blue'},
-    {v:'monochrome',l:'Monochrome',q:'monochrome black and white'},{v:'saffron',l:'Saffron / Gold',q:'saffron gold marigold'},
-    {v:'earthy',l:'Earthy',q:'earthy terracotta brown'},{v:'pastel',l:'Pastel',q:'pastel soft'},
-    {v:'vivid',l:'Vivid',q:'vivid saturated colorful'},{v:'desat',l:'Desaturated',q:'desaturated muted'},{v:'jewel',l:'Jewel',q:'jewel tones emerald magenta sapphire'}]},
-  time:{label:'Time of day', sub:'Light quality',
-    opts:[{v:'golden',l:'Golden hour',q:'golden hour'},{v:'blue',l:'Blue hour',q:'blue hour'},
-    {v:'midday',l:'Midday',q:'midday harsh sun'},{v:'overcast',l:'Overcast',q:'overcast soft daylight'},
-    {v:'dawn',l:'Dawn',q:'dawn early morning mist'},{v:'night',l:'Night',q:'night low light'},{v:'twilight',l:'Twilight',q:'twilight dusk'}]},
-  mood:{label:'Mood', sub:'Emotional register',
-    opts:[{v:'intimate',l:'Intimate',q:'intimate quiet'},{v:'epic',l:'Epic',q:'epic grand cinematic'},
-    {v:'melancholic',l:'Melancholic',q:'melancholic somber'},{v:'joyful',l:'Joyful',q:'joyful playful warm'},
-    {v:'gritty',l:'Gritty',q:'gritty raw documentary'},{v:'dreamy',l:'Dreamy',q:'dreamy soft hazy'},
-    {v:'tense',l:'Tense',q:'tense suspense moody'},{v:'romantic',l:'Romantic',q:'romantic soft warm'},
-    {v:'nostalgic',l:'Nostalgic',q:'nostalgic retro analog'}]},
-  weather:{label:'Weather', sub:'Atmospheric layer',
-    opts:[{v:'monsoon',l:'Monsoon / Rain',q:'monsoon rain wet'},{v:'fog',l:'Fog / Mist',q:'fog mist haze'},
-    {v:'dust',l:'Dust storm',q:'dust storm arid'},{v:'snow',l:'Snow',q:'snow winter'},
-    {v:'hot',l:'Hot dry',q:'hot harsh summer'},{v:'humid',l:'Humid',q:'humid sweaty tropical'}]},
-  occasion:{label:'Occasion', sub:'Festival / event',
-    opts:[{v:'diwali',l:'Diwali',q:'diwali diya lamps'},{v:'holi',l:'Holi',q:'holi colors gulal'},
-    {v:'wedding',l:'Wedding',q:'indian wedding'},{v:'eid',l:'Eid',q:'eid celebration'},
-    {v:'christmas',l:'Christmas',q:'christmas warm lights'},{v:'navratri',l:'Navratri / Garba',q:'navratri garba'},
-    {v:'onam',l:'Onam',q:'onam pookalam kerala'},{v:'pongal',l:'Pongal',q:'pongal sankranti'},
-    {v:'birthday',l:'Birthday',q:'birthday party decor'},{v:'newyear',l:'New Year',q:'new year eve party'},
-    {v:'regular',l:'Non-occasion',q:''}]},
-  character:{label:'Character', sub:'Who is in frame',
-    opts:[{v:'youngwoman',l:'Young woman',q:'young woman portrait'},{v:'youngman',l:'Young man',q:'young man portrait'},
-    {v:'couple',l:'Couple',q:'couple two people'},{v:'family',l:'Family',q:'indian family'},
-    {v:'child',l:'Child',q:'child kid'},{v:'teen',l:'Teen',q:'teenager gen z'},
-    {v:'elderly',l:'Elderly',q:'elderly grandparent'},{v:'group',l:'Group / friends',q:'group of friends'},
-    {v:'professional',l:'Professional at work',q:'professional working'},{v:'none',l:'No people',q:'no people empty space'}]},
-  era:{label:'Era / period', sub:'Time setting',
-    opts:[{v:'contemporary',l:'Contemporary',q:'contemporary modern'},{v:'2010s',l:'2010s',q:'2010s smartphone era'},
-    {v:'2000s',l:'2000s / Y2K',q:'2000s y2k early millennium'},{v:'90s',l:'90s',q:'1990s nostalgia analog'},
-    {v:'80s',l:'70s–80s',q:'1970s 1980s vintage retro'},{v:'preindep',l:'Pre-independence',q:'colonial pre independence india vintage'},
-    {v:'futuristic',l:'Futuristic',q:'futuristic near future scifi'}]},
-  region:{label:'Region', sub:'Geography',
-    opts:[{v:'north',l:'North India',q:'north india delhi punjab'},{v:'south',l:'South India',q:'south india chennai bangalore kerala'},
-    {v:'west',l:'West India',q:'west india mumbai gujarat rajasthan'},{v:'east',l:'East India',q:'east india kolkata bengal'},
-    {v:'rural',l:'Rural India',q:'rural india village'},{v:'mountain',l:'Mountain / Himalaya',q:'himalaya mountain hill station'},
-    {v:'coastal',l:'Coastal',q:'coastal beach goa'},{v:'global',l:'Global / non-India',q:''}]},
-  klass:{label:'Class / Setting', sub:'Socio-economic',
-    opts:[{v:'lowermiddle',l:'Lower-middle',q:'lower middle class chawl'},{v:'middle',l:'Middle class',q:'middle class indian family'},
-    {v:'uppermiddle',l:'Upper-middle',q:'upper middle class apartment'},{v:'luxury',l:'Luxury',q:'luxury premium high end'},
-    {v:'rural',l:'Rural',q:'rural village home'},{v:'urban',l:'Urban',q:'urban metropolitan city'}]},
-  medium:{label:'Medium output', sub:'What you’re making',
-    opts:[{v:'ad',l:'Ad film / TVC',q:'ad film commercial tvc'},{v:'mv',l:'Music video',q:'music video'},
-    {v:'fashionfilm',l:'Fashion film',q:'fashion film narrative'},{v:'fasheditorial',l:'Fashion editorial',q:'fashion editorial campaign'},
-    {v:'reel',l:'Reel / Short vertical',q:'instagram reel vertical short'},{v:'ugc',l:'UGC handheld',q:'ugc handheld documentary'},
-    {v:'print',l:'Print / OOH',q:'print campaign ooh billboard'},{v:'lookbook',l:'Lookbook',q:'lookbook brand catalog'},
-    {v:'product',l:'Product still life',q:'product still life ecommerce'},{v:'beauty',l:'Beauty close-up',q:'beauty closeup macro'},
-    {v:'food',l:'Food commercial',q:'food commercial styling'},{v:'wedding',l:'Wedding film',q:'wedding cinematography candid'}]},
-  lens:{label:'Camera / Lens', sub:'Image feel',
-    opts:[{v:'anamorphic',l:'Anamorphic',q:'anamorphic widescreen lens flare'},{v:'35mm',l:'35mm film',q:'35mm film grain'},
-    {v:'16mm',l:'16mm film',q:'16mm grainy film'},{v:'medium',l:'Medium format',q:'medium format hasselblad'},
-    {v:'wide',l:'Wide angle',q:'wide angle 24mm'},{v:'tele',l:'Telephoto',q:'telephoto compressed 85mm'},
-    {v:'macro',l:'Macro',q:'macro close detail'},{v:'vertical',l:'Vertical phone',q:'vertical 9:16 phone shot'},
-    {v:'drone',l:'Drone / aerial',q:'drone aerial top down'},{v:'handheld',l:'Handheld',q:'handheld shaky documentary'}]}
+  color:{label:’Color’, sub:’Tonal palette’,
+    opts:[{v:’warm’,l:’Warm’,q:’warm tones’},{v:’cool’,l:’Cool’,q:’cool blue’},
+    {v:’monochrome’,l:’Monochrome’,q:’black white’},{v:’saffron’,l:’Saffron / Gold’,q:’gold marigold’},
+    {v:’earthy’,l:’Earthy’,q:’earthy terracotta’},{v:’pastel’,l:’Pastel’,q:’pastel soft’},
+    {v:’vivid’,l:’Vivid’,q:’vivid colorful’},{v:’desat’,l:’Desaturated’,q:’muted desaturated’},{v:’jewel’,l:’Jewel’,q:’jewel tones’}]},
+  time:{label:’Time of day’, sub:’Light quality’,
+    opts:[{v:’golden’,l:’Golden hour’,q:’golden hour’},{v:’blue’,l:’Blue hour’,q:’blue hour’},
+    {v:’midday’,l:’Midday’,q:’harsh daylight’},{v:’overcast’,l:’Overcast’,q:’overcast soft’},
+    {v:’dawn’,l:’Dawn’,q:’early morning’},{v:’night’,l:’Night’,q:’night interior’},{v:’twilight’,l:’Twilight’,q:’dusk twilight’}]},
+  mood:{label:’Mood’, sub:’Emotional register’,
+    opts:[{v:’intimate’,l:’Intimate’,q:’intimate cozy’},{v:’epic’,l:’Epic’,q:’cinematic epic’},
+    {v:’melancholic’,l:’Melancholic’,q:’melancholic moody’},{v:’joyful’,l:’Joyful’,q:’joyful warm’},
+    {v:’gritty’,l:’Gritty’,q:’gritty raw’},{v:’dreamy’,l:’Dreamy’,q:’dreamy hazy’},
+    {v:’tense’,l:’Tense’,q:’tense suspense’},{v:’romantic’,l:’Romantic’,q:’romantic soft’},
+    {v:’nostalgic’,l:’Nostalgic’,q:’nostalgic retro’}]},
+  weather:{label:’Weather’, sub:’Atmospheric layer’,
+    opts:[{v:’monsoon’,l:’Monsoon / Rain’,q:’monsoon rain’},{v:’fog’,l:’Fog / Mist’,q:’foggy misty’},
+    {v:’dust’,l:’Dust storm’,q:’dusty arid’},{v:’snow’,l:’Snow’,q:’winter snow’},
+    {v:’hot’,l:’Hot dry’,q:’harsh summer’},{v:’humid’,l:’Humid’,q:’tropical humid’}]},
+  treatment:{label:’Treatment’, sub:’Where it shoots’,
+    opts:[{v:’cyc’,l:’On Cyc’,q:’white cyclorama studio’},
+    {v:’location’,l:’On Location’,q:’’},
+    {v:’mixed’,l:’Mixed’,q:’’}]},
+  occasion:{label:’Occasion’, sub:’Festival / event’,
+    opts:[{v:’diwali’,l:’Diwali’,q:’diwali diyas’},{v:’holi’,l:’Holi’,q:’holi gulal’},
+    {v:’wedding’,l:’Wedding’,q:’indian wedding’},{v:’eid’,l:’Eid’,q:’eid decor’},
+    {v:’christmas’,l:’Christmas’,q:’christmas lights’},{v:’navratri’,l:’Navratri / Garba’,q:’navratri garba’},
+    {v:’onam’,l:’Onam’,q:’onam kerala’},{v:’pongal’,l:’Pongal’,q:’pongal’},
+    {v:’birthday’,l:’Birthday’,q:’birthday decor’},{v:’newyear’,l:’New Year’,q:’new year party’},
+    {v:’regular’,l:’Non-occasion’,q:’’}]},
+  character:{label:’Character’, sub:’Who is in frame’,
+    opts:[{v:’youngwoman’,l:’Young woman’,q:’woman’},{v:’youngman’,l:’Young man’,q:’man’},
+    {v:’couple’,l:’Couple’,q:’couple’},{v:’family’,l:’Family’,q:’family’},
+    {v:’child’,l:’Child’,q:’kids’},{v:’teen’,l:’Teen’,q:’teen’},
+    {v:’elderly’,l:’Elderly’,q:’elderly’},{v:’group’,l:’Group / friends’,q:’friends group’},
+    {v:’professional’,l:’Professional at work’,q:’professional’},{v:’none’,l:’No people’,q:’’}]},
+  era:{label:’Era / period’, sub:’Time setting’,
+    opts:[{v:’contemporary’,l:’Contemporary’,q:’’},{v:’2010s’,l:’2010s’,q:’2010s’},
+    {v:’2000s’,l:’2000s / Y2K’,q:’y2k 2000s’},{v:’90s’,l:’90s’,q:’1990s’},
+    {v:’80s’,l:’70s–80s’,q:’vintage retro’},{v:’preindep’,l:’Pre-independence’,q:’colonial vintage india’},
+    {v:’futuristic’,l:’Futuristic’,q:’futuristic’}]},
+  region:{label:’Region’, sub:’Geography’,
+    opts:[{v:’north’,l:’North India’,q:’north india’},{v:’south’,l:’South India’,q:’south india’},
+    {v:’west’,l:’West India’,q:’mumbai gujarat’},{v:’east’,l:’East India’,q:’kolkata bengal’},
+    {v:’rural’,l:’Rural India’,q:’rural village’},{v:’mountain’,l:’Mountain / Himalaya’,q:’himalaya hills’},
+    {v:’coastal’,l:’Coastal’,q:’coastal goa’},{v:’global’,l:’Global / non-India’,q:’’}]},
+  klass:{label:’Class / Setting’, sub:’Socio-economic’,
+    opts:[{v:’lowermiddle’,l:’Lower-middle’,q:’chawl’},{v:’middle’,l:’Middle class’,q:’middle class’},
+    {v:’uppermiddle’,l:’Upper-middle’,q:’apartment premium’},{v:’luxury’,l:’Luxury’,q:’luxury’},
+    {v:’rural’,l:’Rural’,q:’rural’},{v:’urban’,l:’Urban’,q:’urban city’}]},
+  medium:{label:’Medium output’, sub:’What you’re making’,
+    opts:[{v:’ad’,l:’Ad film / TVC’,q:’’},{v:’mv’,l:’Music video’,q:’music video’},
+    {v:’fashionfilm’,l:’Fashion film’,q:’fashion’},{v:’fasheditorial’,l:’Fashion editorial’,q:’editorial’},
+    {v:’reel’,l:’Reel / Short vertical’,q:’vertical reel’},{v:’ugc’,l:’UGC handheld’,q:’handheld’},
+    {v:’print’,l:’Print / OOH’,q:’’},{v:’lookbook’,l:’Lookbook’,q:’lookbook’},
+    {v:’product’,l:’Product still life’,q:’still life’},{v:’beauty’,l:’Beauty close-up’,q:’beauty’},
+    {v:’food’,l:’Food commercial’,q:’food styling’},{v:’wedding’,l:’Wedding film’,q:’wedding’}]},
+  lens:{label:’Camera / Lens’, sub:’Image feel’,
+    opts:[{v:’anamorphic’,l:’Anamorphic’,q:’anamorphic’},{v:’35mm’,l:’35mm film’,q:’film grain’},
+    {v:’16mm’,l:’16mm film’,q:’16mm grainy’},{v:’medium’,l:’Medium format’,q:’medium format’},
+    {v:’wide’,l:’Wide angle’,q:’wide angle’},{v:’tele’,l:’Telephoto’,q:’telephoto’},
+    {v:’macro’,l:’Macro’,q:’macro’},{v:’vertical’,l:’Vertical phone’,q:’vertical’},
+    {v:’drone’,l:’Drone / aerial’,q:’drone aerial’},{v:’handheld’,l:’Handheld’,q:’handheld’}]}
 };
-const FILTER_ORDER=['color','time','mood','weather','occasion','character','era','region','klass','medium','lens'];
+const FILTER_ORDER=['treatment','color','time','mood','weather','occasion','character','era','region','klass','medium','lens'];
 let filters=JSON.parse(localStorage.getItem(FILTER_KEY)||'{}');
 
+// ---- Sidebar filter panel ----
+const SF_PRIORITY=['mood','time','occasion','treatment','klass','region','era','weather','color','character','medium','lens'];
+function renderSidebarFilters(){
+  const panel=document.getElementById('sf-panel'); if(!panel) return;
+  panel.innerHTML='';
+  SF_PRIORITY.forEach(dim=>{
+    const D=FILTER_DIMS[dim]; if(!D) return;
+    const active=filters[dim];
+    const activeOpt=active?D.opts.find(o=>o.v===active):null;
+    const grp=document.createElement('div');
+    grp.className='sf-group'+(active?' open':'');
+    grp.dataset.dim=dim;
+    grp.innerHTML=
+      '<button class="sf-group-head" onclick="toggleSFGroup(\''+dim+'\')" aria-expanded="'+(active?'true':'false')+'">'+
+        '<span class="sf-group-head-left">'+
+          '<span class="sf-group-chev">▶</span>'+
+          '<span class="sf-group-name">'+D.label+'</span>'+
+        '</span>'+
+        (activeOpt?'<span class="sf-group-val">'+activeOpt.l+'</span>':'')+
+      '</button>'+
+      '<div class="sf-group-body">'+
+        D.opts.map(o=>
+          '<button class="sf-opt'+(active===o.v?' active':'')+'" data-dim="'+dim+'" data-val="'+o.v+'" onclick="setSFFilter(\''+dim+'\',\''+o.v+'\')">'+o.l+'</button>'
+        ).join('')+
+      '</div>';
+    panel.appendChild(grp);
+  });
+  // update clear button visibility
+  const hasAny=Object.values(filters).some(Boolean);
+  const clearBtn=document.getElementById('sf-clear-btn');
+  if(clearBtn) clearBtn.classList.toggle('visible',hasAny);
+}
+function toggleSFGroup(dim){
+  const grp=document.querySelector('.sf-group[data-dim="'+dim+'"]');
+  if(grp) grp.classList.toggle('open');
+}
+function setSFFilter(dim,val){
+  // toggle off if already selected
+  if(filters[dim]===val){ setFilter(dim,val); } // setFilter will clear it if same
+  else { setFilter(dim,val); }
+  // keep group open after selection
+  const grp=document.querySelector('.sf-group[data-dim="'+dim+'"]');
+  if(grp) grp.classList.add('open');
+}
+
 function filterKeywords(){
-  return FILTER_ORDER.map(d=>{const v=filters[d]; if(!v) return ''; const o=FILTER_DIMS[d].opts.find(x=>x.v===v); return o?o.q:''}).filter(Boolean).join(' ');
+  // Pinterest-priority order — most visually searchable first.
+  // Cap total output at ~4 words so queries stay usable.
+  const PRIORITY=['mood','time','occasion','klass','region','era','weather','color','treatment','character'];
+  const parts=[];
+  for(const d of PRIORITY){
+    const v=filters[d]; if(!v) continue;
+    const o=FILTER_DIMS[d].opts.find(x=>x.v===v);
+    if(!o||!o.q) continue;
+    parts.push(o.q);
+    if(parts.join(' ').trim().split(/\s+/).length>=4) break;
+  }
+  return parts.join(' ').trim();
 }
 function renderFilterUI(){
   let activeCount=0;
@@ -11764,12 +12754,12 @@ function renderFilterUI(){
 function persistFilters(){ localStorage.setItem(FILTER_KEY, JSON.stringify(filters)); }
 function setFilter(d,v){
   if(filters[d]===v) delete filters[d]; else filters[d]=v;
-  persistFilters(); renderFilterUI(); refreshOpenPanel();
+  persistFilters(); renderFilterUI(); renderSidebarFilters(); refreshOpenPanel();
   // re-render the popover if open
   const pop=document.getElementById('filter-pop');
   if(pop.classList.contains('open') && pop.dataset.dim===d) buildFilterPop(d);
 }
-function clearFilters(){ filters={}; persistFilters(); renderFilterUI(); refreshOpenPanel(); closeFilterPop(); }
+function clearFilters(){ filters={}; persistFilters(); renderFilterUI(); renderSidebarFilters(); refreshOpenPanel(); closeFilterPop(); }
 
 // Filter popover
 function openFilterPop(e, dim){
@@ -11846,25 +12836,25 @@ const B={
 // ---- MEDIA TYPE CHIPS ----------------------------------------------
 const MEDIA={
   stills:{label:'Stills', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/></svg>',
-    build:t=>[B.pinterest(t),B.unsplash(t),B.arena(t),B.shotcafe(t),B.filmgrab(t)]},
+    build:t=>[B.pinterest(t)]},
   loops:{label:'Loops', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 4v4h-4"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 20v-4h4"/></svg>',
-    build:t=>[B.pinterestLoop(t),B.arenaMotion(t),B.vimeoLoop(t)]},
+    build:t=>[B.pinterestLoop(t)]},
   videos:{label:'Videos', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg>',
-    build:t=>[B.youtubeVid(t),B.vimeo(t),B.pexelsVid(t),B.cosmos(t)]},
+    build:t=>[B.pinterest(t+' video')]},
   reels:{label:'Reels / Verticals', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 8 16 12l-6 4z" fill="currentColor"/></svg>',
-    build:t=>[B.youtubeShort(t+' reel vertical 9:16'),B.pinterest(t+' reel vertical'),B.cosmos(t+' vertical')]},
+    build:t=>[B.pinterest(t+' reel vertical')]},
   color:{label:'Color', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1.4" fill="currentColor"/><circle cx="14" cy="9" r="1.4" fill="currentColor"/><circle cx="16" cy="14" r="1.4" fill="currentColor"/></svg>',
-    build:t=>[B.adobecolor(t),B.coolors(t),B.moviesincolor(t),B.pinterest(t+' color palette')]},
+    build:t=>[B.pinterest(t+' color palette')]},
   lighting:{label:'Lighting', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 3a6 6 0 0 1 4 10.7c-.7.7-1 1.7-1 2.7v1H9v-1c0-1-.3-2-1-2.7A6 6 0 0 1 12 3z"/></svg>',
-    build:t=>[B.eyecannndy(t),B.youtube(t+' lighting setup cinematography'),B.pinterest(t+' lighting setup')]},
+    build:t=>[B.pinterest(t+' lighting')]},
   architecture:{label:'Architecture', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6M3 21h18"/></svg>',
-    build:t=>[B.dezeen(t),B.archdaily(t),B.archdigest(t),B.arena(t+' interior')]},
+    build:t=>[B.pinterest(t+' interior architecture')]},
   graphics:{label:'Graphics', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>',
-    build:t=>[B.pinterest(t+' graphic design poster artwork'),B.arenaGraphics(t),B.designspir(t),B.fontsinuse(t),B.cosmosPoster(t)]},
+    build:t=>[B.pinterest(t+' graphic design poster')]},
   films:{label:'Films & Shots', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 8h18M3 16h18M7 4v16M17 4v16"/></svg>',
-    build:t=>[B.shotcafe(t),B.filmgrab(t),B.moviecaps(t),B.frameset(t)]},
+    build:t=>[B.pinterest(t+' film still cinematography')]},
   curated:{label:'Curated', glyph:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>',
-    build:t=>[B.cosmos(t),B.arena(t),B.pinterest(t)]}
+    build:t=>[B.pinterest(t)]}
 };
 const MEDIA_ORDER=['stills','loops','videos','reels','color','lighting','architecture','graphics','films','curated'];
 
@@ -11921,15 +12911,24 @@ function tunedQuery(cardName){
 }
 function openMany(urls,label){
   if(!urls.length) return;
-  if(urls.length>1 && !confirm('Open '+urls.length+' '+(label||'tabs')+'?')) return;
+  // All chips now open Pinterest only — single tab, no confirm needed
   urls.forEach((u,i)=>setTimeout(()=>window.open(u,'_blank','noopener'),i*80));
 }
 
 // ---- ROLE SHEET -----------------------------------------------------
 function renderRoleChip(){
   const lbl=document.getElementById('role-label'); if(!lbl) return;
-  if(!currentRole) lbl.textContent='Choose your role';
-  else lbl.textContent=(ROLES[currentRole]||ROLES.any).label;
+  if(!currentRole){ lbl.textContent='Choose your role'; return; }
+  const r=ROLES[currentRole]||ROLES.any;
+  // At iPhone-class widths the sidebar role chip can't fit the full label
+  // (e.g. "Art Director / Production Designer" truncates to "Art Director / Pro…").
+  // Use a compact form on narrow viewports: short field if defined, else first
+  // segment before / or ·.
+  const compact = (typeof window.matchMedia==='function') && window.matchMedia('(max-width: 419px)').matches;
+  lbl.textContent = compact ? (r.short || r.label.split(/[·/]/)[0].trim()) : r.label;
+}
+if(typeof window.matchMedia==='function'){
+  try { window.matchMedia('(max-width: 419px)').addEventListener('change', renderRoleChip); } catch(e){}
 }
 function buildRoleSheet(){
   const grid=document.getElementById('role-grid'); if(!grid) return;
@@ -11995,10 +12994,10 @@ function renderMediaRow(detail, card){
   const name=card.querySelector('.card-name').textContent.trim();
   const q=tunedQuery(name);
   const chips=MEDIA_ORDER.map(k=>{
-    const m=MEDIA[k]; const n=m.build(q).length;
-    return '<button class="media-chip" onclick="onMediaChip(\''+k+'\',\''+name.replace(/'/g,"\\'")+'\')">'+m.glyph+m.label+'<span class="count">'+n+'</span></button>';
+    const m=MEDIA[k];
+    return '<button class="media-chip" onclick="onMediaChip(\''+k+'\',\''+name.replace(/'/g,"\\'")+'\')">'+m.glyph+m.label+'</button>';
   }).join('');
-  row.innerHTML='<div class="media-row-head"><span class="media-title">Find more references</span><span class="media-sub">Each opens a curated multi-platform search</span></div><div class="media-chips">'+chips+'</div>';
+  row.innerHTML='<div class="media-row-head"><span class="media-title">Search by type</span><span class="media-sub">Opens curated search in a new tab</span></div><div class="media-chips">'+chips+'</div>';
 }
 function onMediaChip(k, name){
   const m=MEDIA[k]; if(!m) return;
@@ -12017,10 +13016,38 @@ function renderPropRow(detail, card){
   const chips=cl.map(c=>'<button class="prop-chip" onclick="onPropChip(\''+name.replace(/'/g,"\\'")+'\',\''+c.replace(/'/g,"\\'")+'\')">'+c+'</button>').join('');
   row.innerHTML='<h3>Prop &amp; set clusters</h3><div class="prop-chips">'+chips+'</div>';
 }
+// Map prop cluster display names → concise Pinterest search terms
+const PROP_PINTEREST={
+  'Base furniture':'furniture','Lighting fixtures':'lighting','Wall décor':'wall decor',
+  'Tech & gadgets':'gadgets setup','Personal items':'personal items',
+  'Textiles & soft furnishings':'textiles','Bedding & pillows':'bedding',
+  'Bedside table & lamp':'bedside lamp','Bed & headboard':'bed headboard',
+  'Wardrobe':'wardrobe almirah','Wall art / photos':'wall art',
+  'Personal clutter':'cluttered','Vanity & mirror':'vanity mirror',
+  'Shower fixtures':'shower bathroom','Toiletries':'bathroom shelf',
+  'Plants & planters':'plants','Outdoor furniture':'outdoor furniture',
+  'Cookware':'cookware kitchen','Appliances':'appliances','Pantry & spices':'pantry spices',
+  'Desks & seating':'desk setup','Stationery':'stationery','Plants':'plants',
+  'Tables & seating':'dining furniture','Tableware':'tableware','Bar tools & glassware':'bar glassware',
+  'Signage & boards':'signage','Street vendors':'street vendor',
+  'Luggage & bags':'luggage bags','Diyas / lamps':'diyas lamps',
+  'Rangoli':'rangoli','Flowers / torans':'flower decor',
+  'Hero prop set':'props setup','Practical lighting':'practical lights',
+  'Sports gear':'sports gear','Picnic / camp props':'picnic camping',
+  'Bed & headboard':'bed','Books & bags':'books stationery',
+  'Mandap / stage':'mandap stage','Florals & garlands':'florals garlands',
+  'Mirrors & chairs':'salon chair mirror','Hair tools':'hair styling tools',
+  'Treadmills / weights':'gym weights','Mats & towels':'yoga mat',
+  'Coffee mugs':'coffee mug','Monitor & laptops':'desk monitor',
+  'Espresso machine':'espresso','Tables & chairs':'cafe furniture',
+  'Produce displays':'market produce','Idols / incense':'temple idol',
+  'Curtain partitions':'hospital curtain','IV stands & drips':'IV drip'
+};
 function onPropChip(name, cluster){
-  // open a refined search: scene + cluster + role + filters
-  const q=tunedQuery(name+' '+cluster);
-  openMany([B.pinterest(q), B.arena(q), B.cosmos(q), B.pexelsImg(q)], 'prop references');
+  const term=PROP_PINTEREST[cluster]||(cluster.toLowerCase().split(/[\s&\/]+/).slice(0,2).join(' '));
+  const fk=filterKeywords();
+  const q=(name+' '+term+(fk?' '+fk:'')).trim().replace(/\s+/g,' ');
+  window.open(B.pinterest(q), '_blank', 'noopener');
 }
 function renderReelRow(detail, card){
   // Only show when medium=reel/mv/ugc and remove otherwise
@@ -12046,7 +13073,7 @@ function renderReelRow(detail, card){
   row.innerHTML='<h3>Reel &amp; short-form patterns</h3><div class="prop-chips">'+chips+'</div>';
 }
 function onReelChip(name, q){
-  openMany([B.youtubeShort(name+' '+q), B.pinterest(name+' reel '+q), B.cosmos(name+' '+q+' vertical')], 'reel patterns');
+  window.open(B.pinterest(name+' reel '+q), '_blank', 'noopener');
 }
 
 // Patch openCard: render tuned-for + media + prop + reel rows; toggle .panel-open on .app; remove dim.
@@ -12073,13 +13100,15 @@ function refreshOpenPanel(){
   renderMediaRow(detail, card);
   renderPropRow(detail, card);
   renderReelRow(detail, card);
+  // Re-render Pinterest grid + Tools when filters change — query includes filter keywords
+  if(typeof injectEmbeds==='function') injectEmbeds(detail, card);
 }
 
-// keyboard: R role, F filter focus
+// keyboard: F = focus first filter (R removed — was intercepting browser reload)
 document.addEventListener('keydown', e=>{
   const tag=document.activeElement.tagName, inField=tag==='INPUT'||tag==='TEXTAREA';
   if(inField) return;
-  if(e.key==='r'||e.key==='R'){ e.preventDefault(); openRoleSheet(); }
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
   if(e.key==='f'||e.key==='F'){ e.preventDefault(); const btn=document.querySelector('.filter-btn'); if(btn) btn.click(); }
 });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeRoleSheet(); closeFilterPop(); }});
@@ -12087,6 +13116,7 @@ document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeRoleSheet()
 // init
 renderRoleChip();
 renderFilterUI();
+renderSidebarFilters();
 localStorage.setItem(ROLE_SEEN,'1'); // role now defaults silently; no first-visit modal
 
 // ---- Mobile: bottom nav + search sync ---------------------------
@@ -12432,11 +13462,26 @@ if(mobSearchInput){
   function afterStateChange(){updateRoleUI();const det=document.querySelector('.detail.active');if(det){makeTunedChipsDismissable(det);updatePanelHeader(det.dataset.anchor);}}
 
   /* ====================== INLINE EMBEDS (PR2) ====================== */
-  const ARENA_OK=true; // api.are.na is CORS-friendly; called from browser
+  // api.are.na was open until Cloudflare bot protection started 403-ing it.
+  // Prefer the worker proxy (with optional ARENA_TOKEN); fall back to direct fetch
+  // for older Worker deploys, then to a "search on Are.na" link if both fail.
+  const ARENA_OK=true;
   function embedQuery(card){
-    const name=(card.querySelector('.card-name')||{}).textContent.trim();
+    // Per-card Pinterest override: cyc cards set `data-pinterest-q` because the
+    // visible name "Cyc · Tattoo Parlour" gets typo-corrected by Pinterest to
+    // junk like "cnc tattoo parlour". The override has clean search terms.
+    const override=card.getAttribute('data-pinterest-q');
+    let base;
+    if(override){
+      base=override;
+    } else {
+      const name=(card.querySelector('.card-name')||{}).textContent.trim();
+      // Strip the "Cyc · " prefix from non-overridden cyc cards as a safety net,
+      // and drop the middot which Pinterest can't tokenise.
+      base=name.replace(/^Cyc\s*·\s*/i,'').replace(/·/g,' ');
+    }
     const fk=(typeof filterKeywords==='function')?filterKeywords():'';
-    return (name+' '+fk).trim().replace(/\s+/g,' ');
+    return (base+' '+fk).trim().replace(/\s+/g,' ');
   }
   function injectEmbeds(detail,card){
     let box=detail.querySelector('.embeds');
@@ -12445,23 +13490,169 @@ if(mobSearchInput){
     if(!box){box=document.createElement('div');box.className='embeds';
       const firstBlock=detail.querySelector('.detail-block');
       if(firstBlock)firstBlock.parentNode.insertBefore(box,firstBlock);else detail.appendChild(box);}
+    // Restore previously-relocated rows back into detail before wiping box
+    ['.media-row','.prop-row','.reel-row'].forEach(sel=>{
+      const el=box.querySelector(sel);
+      if(el) detail.insertBefore(el, box.nextSibling);
+    });
     box.dataset.q=q;box.innerHTML='';
-    renderArena(box,q);
-    if(WORKER_BASE){renderImageGrid(box,q,'unsplash','Unsplash');renderImageGrid(box,q,'pexels','Pexels');}
+    const slug=card.dataset.anchor;
+    renderPinterest(box, slug, q, null);
+    renderToolsDisclosure(box, q, detail);
+  }
+
+  /* ====================== Pinterest references (primary) ====================== */
+  // Per-card curated pin URLs seeded in code. localStorage holds user-added pins
+  // per slug under `refhub_pins_<slug>` — preserved across sessions.
+  const CURATED_PINS = {
+    cyc_white: [
+      'https://in.pinterest.com/pin/555490935310794924/',
+      'https://in.pinterest.com/pin/575757133630133010/',
+      'https://in.pinterest.com/pin/169518373467510600/',
+      'https://in.pinterest.com/pin/976084919243029670/',
+      'https://in.pinterest.com/pin/341218109289610466/',
+      'https://in.pinterest.com/pin/1024920827697534700/',
+      'https://in.pinterest.com/pin/222646775318586716/',
+      'https://in.pinterest.com/pin/1073756736151712571/',
+      'https://in.pinterest.com/pin/1091278553445339306/',
+      'https://in.pinterest.com/pin/724516658827924777/',
+      'https://in.pinterest.com/pin/1128151775419251975/',
+      'https://in.pinterest.com/pin/404761085239807199/',
+      'https://in.pinterest.com/pin/14144186325579711/'
+    ]
+  };
+  function loadUserPins(slug){
+    try { return JSON.parse(localStorage.getItem('refhub_pins_'+slug)||'[]'); } catch(e){ return []; }
+  }
+  function saveUserPins(slug,urls){
+    try { localStorage.setItem('refhub_pins_'+slug, JSON.stringify(urls.slice(0,30))); } catch(e){}
+  }
+  function pinsFor(slug){
+    const c=CURATED_PINS[slug]||[]; const u=loadUserPins(slug);
+    return c.concat(u).filter((v,i,a)=>a.indexOf(v)===i);
+  }
+  function isPinterestUrl(u){ return /^https?:\/\/([\w-]+\.)?pinterest\.[a-z.]+\/pin\//i.test(u); }
+
+  function renderPinterest(box, slug, q, beforeNode){
+    const sec=document.createElement('div'); sec.className='pins-sec'; sec.dataset.slug=slug;
+    const pins=pinsFor(slug);
+    const userPins=loadUserPins(slug);
+    const shown=pins.slice(0,9);
+    const searchUrl='https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q);
+    sec.innerHTML =
+      '<div class="pins-head"><h3>References</h3><span class="pins-count">'+
+        (pins.length?(pins.length+' pin'+(pins.length>1?'s':'')+' curated'):'no pins yet')+
+      '</span></div>'+
+      (shown.length
+        ? '<div class="pins-grid">'+shown.map(u=>'<a class="pins-cell skel'+(userPins.includes(u)?' user-pin':'')+'" data-pin="'+esc(u)+'" href="'+esc(u)+'" target="_blank" rel="noopener" aria-label="Open pin on Pinterest"></a>').join('')+'</div>'
+        : '<div class="pins-empty">No pins yet for this scene. Open Pinterest search below, or paste a pin URL to start a curated set.</div>'
+      )+
+      '<div class="pins-actions">'+
+        '<a class="pin-btn primary" href="'+esc(searchUrl)+'" target="_blank" rel="noopener">Search Pinterest ↗</a>'+
+        '<button class="pin-btn" type="button" data-pins-add>+ Add pin URL</button>'+
+      '</div>'+
+      '<form class="pins-addrow" data-pins-form>'+
+        '<input type="url" placeholder="https://www.pinterest.com/pin/…" autocomplete="off" required>'+
+        '<button type="submit">Save</button>'+
+      '</form>';
+    if(beforeNode) box.insertBefore(sec, beforeNode); else box.appendChild(sec);
+
+    // Hydrate thumbnails (worker required — Pinterest oEmbed is server-only)
+    if(WORKER_BASE){
+      shown.forEach(url=>{
+        const cell=sec.querySelector('.pins-cell[data-pin="'+CSS.escape(url)+'"]'); if(!cell) return;
+        fetch(WORKER_BASE+'/pinterest/oembed?url='+encodeURIComponent(url))
+          .then(r=>r.ok?r.json():Promise.reject())
+          .then(d=>{
+            if(!d||!d.thumb) throw 0;
+            cell.classList.remove('skel');
+            cell.innerHTML='<img loading="lazy" alt="" src="'+esc(d.thumb)+'">';
+            if(d.title||d.author) cell.title=(d.title||'').trim()+(d.author?(' — '+d.author):'');
+          })
+          .catch(()=>{
+            cell.classList.remove('skel');
+            cell.innerHTML='<span style="font-size:10px;color:var(--text-4);padding:8px;display:block;text-align:center">pin ↗</span>';
+          });
+      });
+    } else {
+      // No worker: leave cells as link-throughs without thumbnails
+      sec.querySelectorAll('.pins-cell.skel').forEach(c=>{
+        c.classList.remove('skel');
+        c.innerHTML='<span style="font-size:10px;color:var(--text-4);padding:8px;display:block;text-align:center">↗</span>';
+      });
+    }
+
+    // Add-pin form
+    const addBtn=sec.querySelector('[data-pins-add]');
+    const form=sec.querySelector('[data-pins-form]');
+    if(addBtn) addBtn.addEventListener('click',()=>{
+      form.classList.toggle('open');
+      if(form.classList.contains('open')) form.querySelector('input').focus();
+    });
+    if(form) form.addEventListener('submit',e=>{
+      e.preventDefault();
+      const inp=form.querySelector('input'); const v=(inp.value||'').trim();
+      if(!isPinterestUrl(v)){
+        inp.setCustomValidity('Paste a Pinterest pin URL'); inp.reportValidity();
+        setTimeout(()=>inp.setCustomValidity(''),1500);
+        return;
+      }
+      const existing=loadUserPins(slug);
+      const curated=CURATED_PINS[slug]||[];
+      if(existing.includes(v)||curated.includes(v)){ inp.value=''; toast('Already added'); return; }
+      saveUserPins(slug, existing.concat([v]));
+      // Re-render the pins-sec in place (before Tools)
+      const parent=sec.parentNode;
+      const tools=parent.querySelector('.tools-disc');
+      sec.remove();
+      renderPinterest(parent, slug, q, tools||null);
+      toast('Pin saved');
+    });
+  }
+
+  function renderToolsDisclosure(box, q, detail){
+    const det=document.createElement('details'); det.className='tools-disc';
+    det.innerHTML='<summary><span class="tools-label"><span class="tools-chev">▸</span> More tools &amp; sources</span><span class="tools-meta">Are.na · Unsplash · Pexels</span></summary><div class="tools-body"></div>';
+    box.appendChild(det);
+    const body=det.querySelector('.tools-body');
+    // Move all secondary rows from the main detail panel INTO Tools
+    ['.media-row','.prop-row','.reel-row'].forEach(sel=>{
+      const el=detail.querySelector(sel);
+      if(el && !box.contains(el)) body.appendChild(el);
+    });
+    // Lazy-load Are.na / Unsplash / Pexels only when opened
+    let loaded=false;
+    det.addEventListener('toggle',()=>{
+      if(!det.open || loaded) return; loaded=true;
+      const host=document.createElement('div'); host.className='tools-embeds'; body.appendChild(host);
+      renderArena(host,q);
+      if(WORKER_BASE){ renderImageGrid(host,q,'unsplash','Unsplash'); renderImageGrid(host,q,'pexels','Pexels'); }
+    });
   }
   function secHead(title,srcHtml){return '<div class="embed-sec-head"><h3>'+esc(title)+'</h3><span class="embed-src">'+srcHtml+'</span></div>';}
   function renderArena(box,q){
     const sec=document.createElement('div');sec.className='embed-sec';
     sec.innerHTML=secHead('Visual references','<a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">are.na ↗</a>')+'<div class="embed-loading">Loading Are.na…</div>';
     box.appendChild(sec);
-    fetch('https://api.are.na/v2/search/blocks?per=12&q='+encodeURIComponent(q))
+    // Prefer worker proxy (bypasses Are.na's Cloudflare bot block); fall back to direct.
+    const url=WORKER_BASE?(WORKER_BASE+'/arena?q='+encodeURIComponent(q))
+                        :('https://api.are.na/v2/search/blocks?per=12&q='+encodeURIComponent(q));
+    fetch(url)
       .then(r=>r.ok?r.json():Promise.reject(r.status))
       .then(d=>{
-        const blocks=(d.blocks||d.results||[]).filter(b=>b&&b.image&&(b.image.thumb||b.image.display));
-        if(!blocks.length){sec.querySelector('.embed-loading').outerHTML='<div class="embed-fallback">No Are.na blocks — <a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">search on Are.na ↗</a></div>';return;}
+        // Worker returns {results:[{id,thumb,link}]}; direct returns {blocks:[…]}.
+        let items=[];
+        if(Array.isArray(d.results)){
+          items=d.results.map(b=>({id:b.id,src:b.thumb||b.full,link:b.link||('https://www.are.na/block/'+b.id)}));
+        }else{
+          const blocks=(d.blocks||[]).filter(b=>b&&b.image&&(b.image.thumb||b.image.display));
+          items=blocks.map(b=>({id:b.id,src:(b.image.thumb||b.image.display).url,link:'https://www.are.na/block/'+b.id}));
+        }
+        if(!items.length){sec.querySelector('.embed-loading').outerHTML='<div class="embed-fallback">No Are.na blocks — <a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">search on Are.na ↗</a></div>';return;}
         const grid=document.createElement('div');grid.className='embed-grid';
-        blocks.slice(0,9).forEach(b=>{const src=(b.image.thumb||b.image.display).url;
-          grid.insertAdjacentHTML('beforeend','<a class="embed-cell" href="https://www.are.na/block/'+b.id+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(src)+'" alt=""></a>');});
+        items.slice(0,9).forEach(it=>{
+          grid.insertAdjacentHTML('beforeend','<a class="embed-cell" href="'+esc(it.link)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+esc(it.src)+'" alt=""></a>');
+        });
         sec.querySelector('.embed-loading').replaceWith(grid);
       })
       .catch(()=>{const l=sec.querySelector('.embed-loading');if(l)l.outerHTML='<div class="embed-fallback">Are.na unavailable — <a href="https://www.are.na/search?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">open search ↗</a></div>';});
@@ -12596,7 +13787,7 @@ if(mobSearchInput){
     if(mod&&e.shiftKey&&(e.key==='k'||e.key==='K')){e.preventDefault();e.stopImmediatePropagation();window.clearFilters();toast('Filters cleared');return;}
     if(mod&&e.key===','){e.preventDefault();e.stopImmediatePropagation();document.getElementById('theme-btn').click();return;}
     if(!mod&&(e.key==='j'||e.key==='k')){e.preventDefault();moveGrid(e.key==='j'?1:-1);return;}
-    if(!mod&&(e.key==='r'||e.key==='R')){e.preventDefault();e.stopImmediatePropagation();window.openRoleSheet();return;}
+    // R shortcut removed — was intercepting browser Ctrl+Shift+R reload
   },true);
 
   /* ---- j/k grid navigation ---- */
@@ -12646,6 +13837,207 @@ if(mobSearchInput){
     if(location.hash)routeFromHash();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+/* ========================= AI Reference Brain ========================= */
+(function(){
+  function openAI(){
+    const ov=document.getElementById('ai-overlay');
+    if(!ov) return;
+    ov.classList.add('open');
+    setTimeout(()=>{const t=document.getElementById('ai-query-input');if(t)t.focus();},150);
+  }
+  function closeAI(){
+    const ov=document.getElementById('ai-overlay');
+    if(ov) ov.classList.remove('open');
+  }
+  function switchAITab(tab){
+    document.querySelectorAll('.ai-tab').forEach(b=>b.classList.toggle('active',b.dataset.aiTab===tab));
+    document.querySelectorAll('.ai-pane').forEach(p=>p.classList.toggle('active',p.id==='ai-pane-'+tab));
+    const inp=document.getElementById('ai-'+(tab==='query'?'query':'script')+'-input');
+    if(inp) inp.focus();
+  }
+  function aiEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function setStatus(el,msg,isError){
+    el.innerHTML='<div class="ai-status'+(isError?' error':'')+'">'+aiEsc(msg)+'</div>';
+  }
+
+  async function runAIQuery(){
+    const input=document.getElementById('ai-query-input');
+    const results=document.getElementById('ai-query-results');
+    const btn=document.getElementById('ai-query-btn');
+    const desc=(input.value||'').trim();
+    if(!desc){input.focus();return;}
+    const WORKER_BASE=((window.REFROOM_WORKER_BASE)||'').replace(/\/+$/,'');
+    if(!WORKER_BASE){setStatus(results,'Worker not configured',true);return;}
+    btn.disabled=true;
+    setStatus(results,'Generating queries…');
+    try{
+      const r=await fetch(WORKER_BASE+'/ai/query',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({description:desc})
+      });
+      const d=await r.json();
+      if(d.error){ setStatus(results,'Error: '+d.error+(d.detail?' — '+d.detail:''),true); return; }
+      const queries=(d.queries||[]).filter(Boolean);
+      if(!queries.length){ setStatus(results,'No queries returned',true); return; }
+      results.innerHTML=
+        '<div class="ai-section-label">Click to search on Pinterest</div>'+
+        '<div class="ai-query-list">'+
+          queries.map(q=>
+            '<a class="ai-query-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener">'+
+            '<span class="qi-arrow">↗</span>'+aiEsc(q)+'</a>'
+          ).join('')+
+        '</div>';
+    }catch(e){ setStatus(results,'Request failed — is the worker running?',true); }
+    finally{ btn.disabled=false; }
+  }
+
+  async function runAIScript(){
+    const input=document.getElementById('ai-script-input');
+    const results=document.getElementById('ai-script-results');
+    const btn=document.getElementById('ai-script-btn');
+    const scene=(input.value||'').trim();
+    if(!scene){input.focus();return;}
+    const WORKER_BASE=((window.REFROOM_WORKER_BASE)||'').replace(/\/+$/,'');
+    if(!WORKER_BASE){setStatus(results,'Worker not configured',true);return;}
+    btn.disabled=true;
+    setStatus(results,'Analysing scene…');
+    try{
+      const r=await fetch(WORKER_BASE+'/ai/script',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({scene:scene})
+      });
+      const d=await r.json();
+      if(d.error){ setStatus(results,'Error: '+d.error+(d.detail?' — '+d.detail:''),true); return; }
+      const cards=(d.cards||[]).filter(c=>c&&c.slug);
+      const queries=(d.queries||[]).filter(Boolean);
+      let html='';
+      if(cards.length){
+        html+='<div class="ai-section-label">Matched reference cards</div>'+
+          '<div class="ai-cards-row">'+
+          cards.map(c=>{
+            const name=c.name||c.slug;
+            const reason=c.reason?' · '+c.reason:'';
+            return '<button class="ai-card-chip" title="'+aiEsc(reason||name)+'" onclick="closeAI();if(typeof openCard===\'function\')openCard(\''+aiEsc(c.slug)+'\')">'+
+              '<span class="cc-star">✦</span>'+aiEsc(name)+
+              (c.reason?'<span class="cc-reason">'+aiEsc(c.reason)+'</span>':'')+
+            '</button>';
+          }).join('')+
+          '</div>';
+      }
+      if(queries.length){
+        html+='<div class="ai-section-label" style="margin-top:'+(cards.length?'14px':'0')+'">Suggested Pinterest searches</div>'+
+          '<div class="ai-query-list">'+
+          queries.map(q=>{
+            const label=q.label?'<span class="qi-label">'+aiEsc(q.label)+'</span>':'';
+            const query=q.query||q;
+            return '<a class="ai-query-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(query)+'" target="_blank" rel="noopener">'+
+              '<span class="qi-arrow">↗</span>'+label+aiEsc(query)+'</a>';
+          }).join('')+
+          '</div>';
+      }
+      if(!html) html='<div class="ai-status">No results — try a more detailed scene description</div>';
+      results.innerHTML=html;
+    }catch(e){ setStatus(results,'Request failed — is the worker running?',true); }
+    finally{ btn.disabled=false; }
+  }
+
+  // Close on overlay click or Escape
+  const overlay=document.getElementById('ai-overlay');
+  if(overlay) overlay.addEventListener('click',e=>{ if(e.target===overlay) closeAI(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&overlay&&overlay.classList.contains('open')){ e.stopImmediatePropagation(); closeAI(); } },true);
+
+  // Expose globally
+  window.openAI=openAI;
+  window.closeAI=closeAI;
+  window.switchAITab=switchAITab;
+  window.runAIQuery=runAIQuery;
+  window.runAIScript=runAIScript;
+})();
+
+/* ========================= Home-first search view ========================= */
+(function(){
+  // home-mode is set inline on <body> at parse time so the app shell never flashes.
+
+  function exitHome(){
+    document.body.classList.remove('home-mode');
+  }
+  function enterHome(){
+    document.body.classList.add('home-mode');
+    setTimeout(()=>{const i=document.getElementById('home-search-input');if(i){i.value='';i.focus();}},50);
+    const res=document.getElementById('home-results'); if(res){res.classList.remove('show'); res.innerHTML='';}
+  }
+  function homePrefill(text){
+    const inp=document.getElementById('home-search-input');
+    if(inp){ inp.value=text; inp.focus(); }
+    homeSearch();
+  }
+  function homeEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  async function homeSearch(){
+    const inp=document.getElementById('home-search-input');
+    const res=document.getElementById('home-results');
+    const btn=document.getElementById('home-search-go');
+    const q=(inp.value||'').trim();
+    if(!q){inp.focus();return;}
+    const WORKER=(window.REFROOM_WORKER_BASE||'').replace(/\/+$/,'');
+    if(!WORKER){
+      // Fallback: just open Pinterest with the literal query
+      window.open('https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q),'_blank','noopener');
+      return;
+    }
+    btn.disabled=true;
+    res.classList.add('show');
+    res.innerHTML='<div class="home-status"><span class="blink">Composing</span></div>';
+    try{
+      const r=await fetch(WORKER+'/ai/query',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({description:q})
+      });
+      const d=await r.json();
+      if(d.error){
+        // Fallback to direct Pinterest search
+        res.innerHTML='<div class="home-status error">AI unavailable — opening direct Pinterest search…</div>';
+        setTimeout(()=>{ window.open('https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q),'_blank','noopener'); },400);
+        return;
+      }
+      const queries=(d.queries||[]).filter(Boolean);
+      if(!queries.length){
+        res.innerHTML='<div class="home-status">No queries returned. <a href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener" style="color:var(--accent)">Search Pinterest directly ↗</a></div>';
+        return;
+      }
+      res.innerHTML=
+        '<div class="home-results-label">— AI-composed searches</div>'+
+        queries.map((qq,i)=>
+          '<a class="home-result-item" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(qq)+'" target="_blank" rel="noopener">'+
+            '<span class="hr-num">'+(String(i+1).padStart(2,'0'))+'</span>'+homeEsc(qq)+'<span class="hr-arrow" style="margin-left:auto">↗</span>'+
+          '</a>'
+        ).join('');
+    }catch(e){
+      res.innerHTML='<div class="home-status error">Request failed. <a href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q)+'" target="_blank" rel="noopener" style="color:var(--accent)">Open Pinterest directly ↗</a></div>';
+    }finally{
+      btn.disabled=false;
+    }
+  }
+
+  // Submit on Enter
+  document.addEventListener('keydown',e=>{
+    if(!document.body.classList.contains('home-mode')) return;
+    if(e.key==='Enter'){
+      const inp=document.getElementById('home-search-input');
+      if(inp && document.activeElement===inp){ e.preventDefault(); homeSearch(); }
+    }
+  });
+
+  // Expose globally
+  window.exitHome=exitHome;
+  window.enterHome=enterHome;
+  window.homeSearch=homeSearch;
+  window.homePrefill=homePrefill;
 })();
 </script>
 
