@@ -1,0 +1,60 @@
+# Cursor rules — The Reference Room
+
+This project's canonical agent guide is **AGENTS.md** at the repo root. Read
+that file first; everything below is a summary of the hard rules so they're
+always in the system prompt.
+
+## Project shape
+- One static `index.html` (vanilla JS, no build) is the entire app.
+- Optional Cloudflare Worker in `worker/` (image proxy + KV shared sets).
+- localStorage for personal state. No backend otherwise.
+
+## Hard rules — never violate
+
+1. **No AI / LLM / semantic-search features.** The owner has explicitly opted
+   out. The command palette is deterministic fuzzy matching plus rule-based
+   keyword → filter mapping. Do not introduce model calls, embeddings,
+   "smart suggestions" backed by an LLM, or anything that talks to an AI
+   service from the client.
+2. **Single HTML file, vanilla JS.** No build pipeline. Alpine.js or htmx are
+   OK only if reactivity becomes painful. **No React / Vue / Svelte.**
+3. **Preserve all localStorage keys** on every change. Schema lives in
+   `docs/ARCHITECTURE.md`. If you must migrate, bump `refhub_schema_v`.
+4. **API keys never in client HTML.** Only in the Worker (`.dev.vars` locally,
+   `wrangler secret` in production). `.dev.vars` is gitignored.
+5. **Mobile-first, on-set 4G reliability.** Lazy-load embeds, inline what
+   you can, avoid blocking external scripts.
+6. **Don't add**: accounts, auth, real-time collab, Instagram embeds,
+   tutorial modals, density toggles, more theme variants.
+
+## Visual conventions
+- Dark `#0E0E0F` base by default; **one** amber accent `#C8841C` → `#E5A042`.
+- DM Serif Display for titles + section headers; DM Mono everywhere else.
+- Hairline borders at 12–16% white opacity. **No drop shadows.**
+- 8px grid, 24–32px section spacing.
+
+## Where to make changes
+- Visual / CSS → `index.html` `<style>` block (tokens + the "2026 REFRESH"
+  override section near the bottom).
+- Card copy → static HTML in body of `index.html` (`.card[data-anchor]` +
+  matching `.detail[data-anchor]`). **Don't rename `data-anchor` values** —
+  they're URL slugs and localStorage keys.
+- Filters / roles → `FILTER_DIMS`, `ROLES` constants in the JS.
+- New UX behaviour → end of the script block, follow the IIFE pattern.
+  Wrap `window.openCard` etc. — bare-name calls bypass wrappers.
+- Worker → `worker/index.js`.
+
+## Before committing
+Run:
+```
+node tests/smoke.js
+node tests/logic.test.js
+node --check worker/index.js
+```
+Then a manual browser pass (open a card, change a filter, copy a link,
+reload, verify state restores). Don't commit if smoke or logic tests fail.
+
+## Workflow
+- `git pull` before starting, `git push` before stopping.
+- One concern per commit. Clear "why" in the message.
+- See `AGENTS.md` for the full multi-agent etiquette.

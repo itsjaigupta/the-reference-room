@@ -1,25 +1,120 @@
-# CODING AGENTS: READ THIS FIRST
+# The Reference Room
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+A single-page visual reference launcher for Indian film / ad / fashion
+production. Live at **currentmethod.in**.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+- ~146 scene & activity cards, plus cinematographer / film / tool / checklist
+  shelves
+- Click a card → slide-in panel with an inline Are.na image grid + tuned
+  link-outs to 15+ reference sites (Pinterest, Film-Grab, Shot.Cafe, Are.na,
+  Cosmos, Dezeen, ArchDaily, Adobe Color, Coolors, Unsplash, Pexels,
+  YouTube, …)
+- Role-aware queries (DP / Director / Production Designer / Stylist / etc.)
+  + 11-dimension filter system (color, time of day, mood, weather, occasion,
+  character, era, region, class, medium, lens)
+- Command palette (Cmd-K / Ctrl-K / `/`) — deterministic fuzzy launcher
+- Shareable URLs for every view; "Save as pinned set" → a link to send a
+  director
+- Dark `#0E0E0F` base, DM Serif Display + DM Mono, single amber accent
 
-## What you should do — IMPORTANT
+**Stack**: one static `index.html` (vanilla JS, no build step) + an optional
+Cloudflare Worker (`worker/`) for image proxies and KV-backed shared sets.
+localStorage for personal state. That's it.
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+---
 
-**Read `project/The Reference Room v3.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+## Quick start
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+### Run the app (Are.na embeds work, no API keys needed)
 
-## About the design files
+```bash
+npx serve .         # from repo root → open the printed URL
+```
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+Don't open `index.html` as a `file://` — browsers block its network calls.
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+### Add Unsplash + Pexels grids + KV-backed sharing
 
-## Bundle contents
+```bash
+cd worker
+# create .dev.vars with UNSPLASH_KEY=... and PEXELS_KEY=... (gitignored)
+npx wrangler dev    # → http://localhost:8787
+```
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `The Reference Room` project files (HTML prototypes, assets, components)
+Then in `index.html` `<head>`, temporarily set
+`window.REFROOM_WORKER_BASE = "http://localhost:8787"` (don't commit), and
+serve the app with `npx serve .` in another terminal.
+
+### Deploy
+
+See [`worker/README.md`](./worker/README.md) for the Cloudflare Worker deploy
+walkthrough. After deploying, set `REFROOM_WORKER_BASE` to the production
+URL and commit.
+
+---
+
+## For AI agents / IDEs / new contributors
+
+**This repo is designed to be picked up by any code-capable AI in any IDE
+without losing context.** Read these first:
+
+- [`AGENTS.md`](./AGENTS.md) — canonical agent guide (cross-tool)
+- [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — file layout, structure,
+  localStorage schema, URL routing, Worker endpoints
+- [`docs/DECISIONS.md`](./docs/DECISIONS.md) — why we made each non-obvious call
+- [`docs/ROADMAP.md`](./docs/ROADMAP.md) — done, pending, NOT in scope
+- [`docs/REFACTOR_BRIEF.md`](./docs/REFACTOR_BRIEF.md) — the original product
+  brief (source intent)
+
+Tool-specific files (`CLAUDE.md`, `.cursorrules`) defer to `AGENTS.md`.
+
+**Sanity check before committing** any change to `index.html` or
+`worker/index.js`:
+
+```bash
+node tests/smoke.js          # full script loads in a stubbed DOM
+node tests/logic.test.js     # codec / fuzzy / smart-query unit tests
+```
+
+See [`tests/README.md`](./tests/README.md) for more.
+
+---
+
+## Hard rules
+
+Lifted from `AGENTS.md` because they're easy to miss:
+
+1. **No AI / LLM / semantic-search features.** The owner has explicitly
+   opted out. The palette is deterministic; keyword image search only.
+2. **Single HTML file, vanilla JS.** No build pipeline. Alpine.js or htmx
+   only if reactivity genuinely needed. **No React/Vue/Svelte.**
+3. **Preserve all localStorage** on every change. Schema is in
+   `docs/ARCHITECTURE.md`.
+4. **API keys never in client HTML.** Worker secrets only.
+5. **Mobile-first**, on-set 4G reliability.
+
+---
+
+## Repo layout
+
+```
+index.html              — the entire app
+worker/                 — Cloudflare Worker (image proxy + OG + KV shared sets)
+tests/                  — runnable sanity tests (no dependencies)
+docs/                   — architecture, decisions, roadmap, original brief
+chats/                  — historical design transcripts (pre-refactor)
+project/                — earlier design prototypes (pre-refactor)
+AGENTS.md               — canonical agent guide
+CLAUDE.md, .cursorrules — tool pointers to AGENTS.md
+README.md               — you are here
+```
+
+---
+
+## License & credits
+
+Created at currentmethod.in. Original Claude Design handoff in `chats/` and
+`project/` (pre-refactor) preserved for historical context.
+
+Visual references inside the app come from Are.na, Unsplash, and Pexels via
+their public APIs — each with attribution and link-outs per their guidelines.
