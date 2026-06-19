@@ -4,6 +4,13 @@ This project follows a **tool-agnostic agent guide**. Read [`AGENTS.md`](./AGENT
 first — it is the canonical context for every contributor (Claude, other AIs,
 humans).
 
+## Interaction — ask with the picker UI (owner preference)
+
+When you have a question, or you're proposing a solution or a choice between
+approaches, **ask with the AskUserQuestion picker UI (the clickable
+questionnaire), with concrete options — don't assume.** Applies even to small
+forks; when in doubt, ask. Canonical version in `AGENTS.md`.
+
 ## Quick orientation for Claude Code
 
 - The whole app is one static `index.html` (vanilla JS, no build).

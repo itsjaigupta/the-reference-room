@@ -28,6 +28,23 @@ carry the nuance.
 
 ---
 
+## Owner preference — ask with the picker UI, don't assume
+
+Standing instruction from the owner: when you have a question, or you're
+proposing a solution, plan, or a choice between approaches, **ask with a
+clickable multiple-choice picker instead of assuming.** Offer concrete,
+enumerated options.
+
+- **Claude Code**: use the **AskUserQuestion** tool (the clickable
+  questionnaire). Other assistants / IDEs: present clearly numbered options and
+  wait for a pick before acting.
+- Applies even to seemingly small forks — a quick pick beats a wrong
+  assumption the owner has to unwind.
+- Truly trivial, reversible defaults don't each need a prompt; **when in
+  doubt, ask.**
+
+---
+
 ## How to run it
 
 ### Just the app (Are.na embeds work, no API keys needed)
