@@ -45,6 +45,17 @@ enumerated options.
 
 ---
 
+## Owner preference — answer the owner's questions before coding
+
+If the owner's message contains a question — **even one that sounds
+rhetorical** — answer it in chat first. **Never start coding or editing files
+while a question of the owner's is unanswered.**
+
+This pairs with the picker rule above: the owner's questions get answered in
+chat first; your questions and proposals go back to the owner as a picker.
+
+---
+
 ## How to run it
 
 ### Just the app (Are.na embeds work, no API keys needed)

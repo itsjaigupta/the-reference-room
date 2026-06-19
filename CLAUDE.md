@@ -4,12 +4,16 @@ This project follows a **tool-agnostic agent guide**. Read [`AGENTS.md`](./AGENT
 first — it is the canonical context for every contributor (Claude, other AIs,
 humans).
 
-## Interaction — ask with the picker UI (owner preference)
+## Interaction — owner preferences (don't violate)
 
 When you have a question, or you're proposing a solution or a choice between
 approaches, **ask with the AskUserQuestion picker UI (the clickable
 questionnaire), with concrete options — don't assume.** Applies even to small
-forks; when in doubt, ask. Canonical version in `AGENTS.md`.
+forks; when in doubt, ask.
+
+If the owner's message contains a question — **even a rhetorical one** — answer
+it in chat first, and **never start coding while a question of theirs is
+unanswered.** Canonical versions in `AGENTS.md`.
 
 ## Quick orientation for Claude Code
 
